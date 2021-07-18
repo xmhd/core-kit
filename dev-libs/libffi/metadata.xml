@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="project">
-		<email>toolchain@gentoo.org</email>
-		<name>Gentoo Toolchain Project</name>
-	</maintainer>
-	<longdescription lang="en">
+ <maintainer type="project">
+  <email>toolchain@gentoo.org</email>
+  <name>Gentoo Toolchain Project</name>
+ </maintainer>
+ <longdescription lang="en">
 		Compilers for high level languages generate code that follow certain
 		conventions. These conventions are necessary, in part, for separate
 		compilation to work. One such convention is the "calling
@@ -33,7 +33,13 @@
 		exist above libffi that handles type conversions for values passed
 		between the two languages.
 	</longdescription>
-	<use>
-		<flag name="pax_kernel">Use PaX emulated trampolines, for we can't use PROT_EXEC</flag>
-	</use>
+ <upstream>
+  <remote-id type="cpe">cpe:/a:libffi_project:libffi</remote-id>
+ </upstream>
+ <use>
+  <flag name="exec-static-trampoline">Don't rely on dynamic code generation for trampolines.</flag>
+  <flag name="pax-kernel">Use PaX emulated trampolines, for we can't use PROT_EXEC</flag>
+  <flag name="pax_kernel">DEPRECATED alias for 'pax-kernel'. Do not use.</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

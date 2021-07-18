@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<upstream>
-		<bugs-to>http://crbug.com</bugs-to>
-		<changelog>https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+log/master</changelog>
-		<doc>https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+/master/README</doc>
-	</upstream>
-	<maintainer type="person">
-		<email>zmedico@gentoo.org</email>
-	</maintainer>
-	</pkgmetadata>
+ <maintainer type="person">
+  <email>zmedico@gentoo.org</email>
+ </maintainer>
+ <upstream>
+  <changelog>https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+log/master</changelog>
+  <bugs-to>http://crbug.com</bugs-to>
+  <doc>https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+/master/README</doc>
+ </upstream>
+ <use>
+  <flag name="libzip">Use dev-libs/libzip.</flag>
+ </use>
+ <origin>gentoo-staging</origin>
+</pkgmetadata>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-<maintainer type="project">
-	<email>crypto@gentoo.org</email>
-	<name>Crypto</name>
-</maintainer>
-<longdescription>
+ <maintainer type="person">
+  <email>polynomial-c@gentoo.org</email>
+  <name>Lars Wendler</name>
+ </maintainer>
+ <longdescription>
 In an ideal world, Assuan is irrelevant.  Assuan's primary use is to
 allow a client to interact with a non-persistent server.  Using Assuan,
 this is accomplished by forking a subprocess and communicating with it
@@ -16,4 +16,6 @@ increased number of context switches, but also a significant amount of
 data is MEMCPYed from the client to a file descriptor and from the file
 descriptor to the server.
 </longdescription>
+ 
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

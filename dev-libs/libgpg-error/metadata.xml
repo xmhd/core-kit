@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="project">
-		<email>crypto@gentoo.org</email>
-		<name>Crypto</name>
-	</maintainer>
-	<use>
-		<flag name="common-lisp">Install common-lisp files</flag>
-	</use>
+ <maintainer type="person">
+  <email>polynomial-c@gentoo.org</email>
+  <name>Lars Wendler</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="cpe">cpe:/a:gnupg:libgpg-error</remote-id>
+ </upstream>
+ <use>
+  <flag name="common-lisp">Install common-lisp files</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-<maintainer type="person">
+ <maintainer type="person">
   <email>pacho@gentoo.org</email>
-    <name>Pacho Ramos</name>
-  </maintainer>
-<use>
+  <name>Pacho Ramos</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="cpe">cpe:/a:bluez:bluez</remote-id>
+  <remote-id type="cpe">cpe:/a:bluez:bluez</remote-id>
+ </upstream>
+ <use>
   <flag name="btpclient">Enable BTP client</flag>
   <flag name="deprecated">Build deprecated plugins</flag>
   <flag name="experimental">Build experimental plugins</flag>
@@ -13,15 +17,11 @@
     purpose by default. All this tools shouldn't be used. Then, please
     notify upstream about you still need them to let them know the
     situation.</flag>
-  <flag name="mesh">Add support for Bluetooth Mesh control application and advertising
-    bearer.</flag>
-  <flag name="obex">Enable OBEX transfer support.</flag>
-  <flag name="test-programs">Install tools for testing of
-    various Bluetooth functions</flag>
+  <flag name="mesh">Add support for Bluetooth Mesh control application and advertising bearer.</flag>
+  <flag name="midi">Enable MIDI support</flag>
+  <flag name="obex">Enable OBEX transfer support</flag>
+  <flag name="test-programs">Install tools for testing of various Bluetooth functions</flag>
   <flag name="user-session">Allow compatibility with user-session semantics for session bus under systemd</flag>
-</use>
-<upstream>
-  <remote-id type="cpe">cpe:/a:bluez:bluez</remote-id>
-  <remote-id type="cpe">cpe:/a:bluez:bluez-libs</remote-id>
-</upstream>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

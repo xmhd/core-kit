@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>whissi@gentoo.org</email>
-		<name>Thomas Deutschmann</name>
-	</maintainer>
-	<longdescription lang="en">
+ <maintainer type="person">
+  <email>whissi@gentoo.org</email>
+  <name>Thomas Deutschmann</name>
+ </maintainer>
+ <longdescription lang="en">
 		The Fake Time Preload Library (FTPL, a.k.a. libfaketime) intercepts
 		various system calls which programs use to retrieve the current date and time.
 		It can then report faked dates and times (as specified by you, the user) to
@@ -13,7 +13,8 @@
 		without having to change the time system-wide. FTPL allows you to specify both
 		absolute dates (e.g., 2004-01-01) and relative dates (e.g., 10 days ago).
 	</longdescription>
-	<upstream>
-		<remote-id type="github">wolfcw/libfaketime</remote-id>
-	</upstream>
+ <upstream>
+  <remote-id type="github">wolfcw/libfaketime</remote-id>
+ </upstream>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

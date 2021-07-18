@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>gyakovlev@gentoo.org</email>
-		<name>Georgy Yakovlev</name>
-	</maintainer>
-	<longdescription lang="en">
+ <maintainer type="person">
+  <email>gyakovlev@gentoo.org</email>
+  <name>Georgy Yakovlev</name>
+ </maintainer>
+ <longdescription lang="en">
 		An alternative implementation of the zfs-auto-snapshot service for Linux
 		that is compatible with zfs-linux and zfs-fuse.
 
@@ -14,11 +14,12 @@
 		@zfs-auto-snap_daily, @zfs-auto-snap_weekly, and @zfs-auto-snap_monthly
 		snapshots if it is installed.
 	</longdescription>
-	<use>
-		<flag name="default-exclude">Only take snapshots if dataset has com.sun:auto-snapshot=true property set</flag>
-	</use>
-
-	<upstream>
-		<remote-id type="github">zfsonlinux/zfs-auto-snapshot</remote-id>
-	</upstream>
+ <upstream>
+  <remote-id type="github">zfsonlinux/zfs-auto-snapshot</remote-id>
+ </upstream>
+ <use>
+  <flag name="cron">Install /etc/cron.* files</flag>
+  <flag name="default-exclude">Only take snapshots of datasets with com.sun:auto-snapshot=true property set</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

@@ -1,5 +1,8 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
+
+# @DEAD
+# No consumers left. Removal in 30 days.
 
 # @ECLASS: darcs.eclass
 # @MAINTAINER:
@@ -11,6 +14,7 @@
 # Andres Loeh   <kosmikus@gentoo.org> (darcs.eclass author)
 # Alexander Vershilov <alexander.vershilov@gmail.com> (various contributions)
 # @BLURB: This eclass provides functions for fetch and unpack darcs repositories
+# @DEPRECATED: none
 # @DESCRIPTION:
 # This eclass provides the generic darcs fetching functions.
 #
@@ -70,6 +74,7 @@ SRC_URI=""
 : ${EDARCS_REPOSITORY:=}
 
 # @ECLASS-VARIABLE: EDARCS_OFFLINE
+# @USER_VARIABLE
 # @DESCRIPTION:
 # Set this variable to a non-empty value to disable the automatic updating of
 # a darcs repository. This is intended to be set outside the darcs source
@@ -85,10 +90,21 @@ SRC_URI=""
 
 # --- end ebuild-configurable settings ---
 
-DEPEND="dev-vcs/darcs
-	net-misc/rsync"
+PROPERTIES+=" live"
+
+case ${EAPI:-0} in
+	[0-6]) # no need to care about 5-HDEPEND and similar
+		DEPEND="dev-vcs/darcs
+			net-misc/rsync"
+		;;
+	*)
+		BDEPEND="dev-vcs/darcs
+			net-misc/rsync"
+		;;
+esac
 
 # @FUNCTION: darcs_patchcount
+# @INTERNAL
 # @DESCRIPTION:
 # Internal function to determine amount of patches in repository.
 darcs_patchcount() {
@@ -98,6 +114,7 @@ darcs_patchcount() {
 }
 
 # @FUNCTION: darcs_fetch
+# @INTERNAL
 # @DESCRIPTION:
 # Internal function is called from darcs_src_unpack
 darcs_fetch() {

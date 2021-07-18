@@ -1,15 +1,15 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 
 DESCRIPTION="Simple generator for Forth based BootMenu scripts for Pegasos machines"
-HOMEPAGE="http://tbs-software.com/morgoth/projects.html"
+HOMEPAGE="https://tbs-software.com/morgoth/projects.html"
 SRC_URI="http://tbs-software.com/morgoth/files/bootcreator-src.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="ppc -*"
+KEYWORDS="-* ppc"
 IUSE=""
 
 DEPEND=""

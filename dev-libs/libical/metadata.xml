@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>asturm@gentoo.org</email>
-		<name>Andreas Sturmlechner</name>
-	</maintainer>
-	<upstream>
-		<remote-id type="github">libical/libical</remote-id>
-	</upstream>
+ <maintainer type="person">
+  <email>asturm@gentoo.org</email>
+  <name>Andreas Sturmlechner</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="github">libical/libical</remote-id>
+  <remote-id type="cpe">cpe:/a:libical_project:libical</remote-id>
+ </upstream>
+ <use>
+  <flag name="glib">Enable dev-libs/glib interface support</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

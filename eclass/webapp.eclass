@@ -1,13 +1,24 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: webapp.eclass
 # @MAINTAINER:
 # web-apps@gentoo.org
+# @SUPPORTED_EAPIS: 5 6 7
 # @BLURB: functions for installing applications to run under a web server
 # @DESCRIPTION:
 # The webapp eclass contains functions to handle web applications with
 # webapp-config. Part of the implementation of GLEP #11
+
+case ${EAPI:-0} in
+	[567]) ;;
+	*) die "${ECLASS}: EAPI ${EAPI:-0} not supported" ;;
+esac
+
+EXPORT_FUNCTIONS pkg_postinst pkg_setup src_install pkg_prerm
+
+if [[ -z ${_WEBAPP_ECLASS} ]]; then
+_WEBAPP_ECLASS=1
 
 # @ECLASS-VARIABLE: WEBAPP_DEPEND
 # @DESCRIPTION:
@@ -16,12 +27,14 @@
 WEBAPP_DEPEND=">=app-admin/webapp-config-1.50.15"
 
 # @ECLASS-VARIABLE: WEBAPP_NO_AUTO_INSTALL
+# @PRE_INHERIT
 # @DESCRIPTION:
 # An ebuild sets this to `yes' if an automatic installation and/or upgrade is
 # not possible. The ebuild should overwrite pkg_postinst() and explain the
 # reason for this BEFORE calling webapp_pkg_postinst().
 
 # @ECLASS-VARIABLE: WEBAPP_OPTIONAL
+# @PRE_INHERIT
 # @DESCRIPTION:
 # An ebuild sets this to `yes' to make webapp support optional, in which case
 # you also need to take care of USE-flags and dependencies.
@@ -33,8 +46,6 @@ if [[ "${WEBAPP_OPTIONAL}" != "yes" ]]; then
 	RDEPEND="${DEPEND}"
 fi
 
-EXPORT_FUNCTIONS pkg_postinst pkg_setup src_install pkg_prerm
-
 INSTALL_DIR="/${PN}"
 IS_UPGRADE=0
 IS_REPLACE=0
@@ -42,9 +53,9 @@ IS_REPLACE=0
 INSTALL_CHECK_FILE="installed_by_webapp_eclass"
 SETUP_CHECK_FILE="setup_by_webapp_eclass"
 
-ETC_CONFIG="${ROOT}etc/vhosts/webapp-config"
-WEBAPP_CONFIG="${ROOT}usr/sbin/webapp-config"
-WEBAPP_CLEANER="${ROOT}usr/sbin/webapp-cleaner"
+ETC_CONFIG="${ROOT%/}/etc/vhosts/webapp-config"
+WEBAPP_CONFIG="${ROOT%/}/usr/sbin/webapp-config"
+WEBAPP_CLEANER="${ROOT%/}/usr/sbin/webapp-cleaner"
 
 # ==============================================================================
 # INTERNAL FUNCTIONS
@@ -365,7 +376,7 @@ webapp_src_preinst() {
 # @DESCRIPTION:
 # The default pkg_setup() for this eclass. This will gather required variables
 # from webapp-config and check if there is an application installed to
-# `${ROOT}/var/www/localhost/htdocs/${PN}/' if USE=vhosts is not set.
+# `${ROOT%/}/var/www/localhost/htdocs/${PN}/' if USE=vhosts is not set.
 #
 # You need to call this function BEFORE anything else has run in your custom
 # pkg_setup().
@@ -389,7 +400,7 @@ webapp_pkg_setup() {
 	G_HOSTNAME="localhost"
 	webapp_read_config
 
-	local my_dir="${ROOT}${VHOST_ROOT}/${MY_HTDOCSBASE}/${PN}"
+	local my_dir="${ROOT%/}/${VHOST_ROOT}/${MY_HTDOCSBASE}/${PN}"
 
 	# if USE=vhosts is enabled OR no application is installed we're done here
 	if ! has vhosts ${IUSE} || use vhosts || [[ ! -d "${my_dir}" ]]; then
@@ -453,7 +464,7 @@ webapp_src_install() {
 # @FUNCTION: webapp_pkg_postinst
 # @DESCRIPTION:
 # The default pkg_postinst() for this eclass. This installs the web application to
-# `${ROOT}/var/www/localhost/htdocs/${PN}/' if USE=vhosts is not set. Otherwise
+# `${ROOT%/}/var/www/localhost/htdocs/${PN}/' if USE=vhosts is not set. Otherwise
 # display a short notice how to install this application with webapp-config.
 #
 # You need to call this function AFTER everything else has run in your custom
@@ -464,7 +475,7 @@ webapp_pkg_postinst() {
 	webapp_read_config
 
 	# sanity checks, to catch bugs in the ebuild
-	if [[ ! -f "${ROOT}${MY_APPDIR}/${INSTALL_CHECK_FILE}" ]]; then
+	if [[ ! -f "${ROOT%/}/${MY_APPDIR}/${INSTALL_CHECK_FILE}" ]]; then
 		eerror
 		eerror "This ebuild did not call webapp_src_install() at the end"
 		eerror "of the src_install() function"
@@ -575,3 +586,5 @@ webapp_pkg_prerm() {
 		echo
 	fi
 }
+
+fi

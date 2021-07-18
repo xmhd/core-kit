@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="project">
-		<email>freedesktop-bugs@gentoo.org</email>
-	</maintainer>
-	<use>
-		<flag name="elogind">Use <pkg>sys-auth/elogind</pkg> for session tracking.</flag>
-		<flag name="systemd">Build with <pkg>sys-apps/systemd</pkg> at_console support</flag>
-		<flag name="user-session">Enable user-session semantics for session bus under systemd</flag>
-	</use>
-	<upstream>
-		<remote-id type="cpe">cpe:/a:freedesktop:dbus</remote-id>
-	</upstream>
+ <maintainer type="project">
+  <email>freedesktop-bugs@gentoo.org</email>
+ </maintainer>
+ <upstream>
+  <remote-id type="cpe">cpe:/a:freedesktop:dbus</remote-id>
+ </upstream>
+ <use>
+  <flag name="elogind">Use <pkg>sys-auth/elogind</pkg> for session tracking.</flag>
+  <flag name="systemd">Build with <pkg>sys-apps/systemd</pkg> at_console support</flag>
+  <flag name="user-session">Enable user-session semantics for session bus under systemd</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

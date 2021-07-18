@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>hurikhan77+bgo@gmail.com</email>
-		<name>Kai Krakow</name>
-	</maintainer>
-	<maintainer type="project">
-		<email>proxy-maint@gentoo.org</email>
-		<name>Proxy Maintainers</name>
-	</maintainer>
-<use>
-	<flag name="tools">Build extra tools useful for debugging (fiemap, fiewalk)</flag>
-</use>
-<upstream>
-	<bugs-to>https://github.com/Zygo/bees/issues</bugs-to>
-	<remote-id type="github">Zygo/bees</remote-id>
-</upstream>
+ <maintainer type="person">
+  <email>hurikhan77+bgo@gmail.com</email>
+  <name>Kai Krakow</name>
+ </maintainer>
+ <maintainer type="project">
+  <email>proxy-maint@gentoo.org</email>
+  <name>Proxy Maintainers</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="github">Zygo/bees</remote-id>
+  <bugs-to>https://github.com/Zygo/bees/issues</bugs-to>
+ </upstream>
+ <use>
+  <flag name="tools">Build extra tools useful for debugging (fiemap, fiewalk)</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

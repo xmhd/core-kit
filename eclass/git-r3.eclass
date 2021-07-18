@@ -1,39 +1,34 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: git-r3.eclass
 # @MAINTAINER:
 # Michał Górny <mgorny@gentoo.org>
-# @SUPPORTED_EAPIS: 4 5 6 7
+# @SUPPORTED_EAPIS: 5 6 7 8
 # @BLURB: Eclass for fetching and unpacking git repositories.
 # @DESCRIPTION:
 # Third generation eclass for easing maintenance of live ebuilds using
 # git as remote repository.
 
-case "${EAPI:-0}" in
-	0|1|2|3)
-		die "Unsupported EAPI=${EAPI} (obsolete) for ${ECLASS}"
-		;;
-	4|5|6|7)
-		;;
-	*)
-		die "Unsupported EAPI=${EAPI} (unknown) for ${ECLASS}"
-		;;
+case ${EAPI:-0} in
+	5|6|7|8) ;;
+	*) die "${ECLASS}: EAPI ${EAPI:-0} not supported" ;;
 esac
 
 EXPORT_FUNCTIONS src_unpack
 
 if [[ ! ${_GIT_R3} ]]; then
 
-if [[ ! ${_INHERITED_BY_GIT_2} ]]; then
-	if [[ ${EAPI:-0} != [0123456] ]]; then
-		BDEPEND=">=dev-vcs/git-1.8.2.1[curl]"
-	else
-		DEPEND=">=dev-vcs/git-1.8.2.1[curl]"
-	fi
+PROPERTIES+=" live"
+
+if [[ ${EAPI} != [56] ]]; then
+	BDEPEND=">=dev-vcs/git-1.8.2.1[curl]"
+else
+	DEPEND=">=dev-vcs/git-1.8.2.1[curl]"
 fi
 
 # @ECLASS-VARIABLE: EGIT_CLONE_TYPE
+# @USER_VARIABLE
 # @DESCRIPTION:
 # Type of clone that should be used against the remote repository.
 # This can be either of: 'mirror', 'single', 'shallow'.
@@ -88,6 +83,8 @@ fi
 : ${EGIT_MIN_CLONE_TYPE:=shallow}
 
 # @ECLASS-VARIABLE: EGIT3_STORE_DIR
+# @USER_VARIABLE
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Storage directory for git sources.
 #
@@ -174,6 +171,7 @@ fi
 # to the merge commit date.
 
 # @ECLASS-VARIABLE: EGIT_CHECKOUT_DIR
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # The directory to check the git sources out to.
 #
@@ -225,19 +223,19 @@ _git-r3_env_setup() {
 			;;
 		single)
 			if [[ ${EGIT_CLONE_TYPE} == shallow ]]; then
-				einfo "git-r3: ebuild needs to be cloned in '\e[1msingle\e[22m' mode, adjusting"
+				einfo "git-r3: ebuild needs to be cloned in 'single' mode, adjusting"
 				EGIT_CLONE_TYPE=single
 			fi
 			;;
 		single+tags)
 			if [[ ${EGIT_CLONE_TYPE} == shallow || ${EGIT_CLONE_TYPE} == single ]]; then
-				einfo "git-r3: ebuild needs to be cloned in '\e[1msingle+tags\e[22m' mode, adjusting"
+				einfo "git-r3: ebuild needs to be cloned in 'single+tags' mode, adjusting"
 				EGIT_CLONE_TYPE=single+tags
 			fi
 			;;
 		mirror)
 			if [[ ${EGIT_CLONE_TYPE} != mirror ]]; then
-				einfo "git-r3: ebuild needs to be cloned in '\e[1mmirror\e[22m' mode, adjusting"
+				einfo "git-r3: ebuild needs to be cloned in 'mirror' mode, adjusting"
 				EGIT_CLONE_TYPE=mirror
 			fi
 			;;
@@ -277,50 +275,6 @@ _git-r3_env_setup() {
 
 	if [[ ${EGIT_COMMIT} && ${EGIT_COMMIT_DATE} ]]; then
 		die "EGIT_COMMIT and EGIT_COMMIT_DATE can not be specified simultaneously"
-	fi
-
-	# Migration helpers. Remove them when git-2 is removed.
-
-	if [[ ${EGIT_SOURCEDIR} ]]; then
-		eerror "EGIT_SOURCEDIR has been replaced by EGIT_CHECKOUT_DIR. While updating"
-		eerror "your ebuild, please check whether the variable is necessary at all"
-		eerror "since the default has been changed from \${S} to \${WORKDIR}/\${P}."
-		eerror "Therefore, proper setting of S may be sufficient."
-		die "EGIT_SOURCEDIR has been replaced by EGIT_CHECKOUT_DIR."
-	fi
-
-	if [[ ${EGIT_MASTER} ]]; then
-		eerror "EGIT_MASTER has been removed. Instead, the upstream default (HEAD)"
-		eerror "is used by the eclass. Please remove the assignment or use EGIT_BRANCH"
-		eerror "as necessary."
-		die "EGIT_MASTER has been removed."
-	fi
-
-	if [[ ${EGIT_HAS_SUBMODULES} ]]; then
-		eerror "EGIT_HAS_SUBMODULES has been removed. The eclass no longer needs"
-		eerror "to switch the clone type in order to support submodules and therefore"
-		eerror "submodules are detected and fetched automatically. If you need to"
-		eerror "disable or filter submodules, see EGIT_SUBMODULES."
-		die "EGIT_HAS_SUBMODULES is no longer necessary."
-	fi
-
-	if [[ ${EGIT_PROJECT} ]]; then
-		eerror "EGIT_PROJECT has been removed. Instead, the eclass determines"
-		eerror "the local clone path using path in canonical EGIT_REPO_URI."
-		eerror "If the current algorithm causes issues for you, please report a bug."
-		die "EGIT_PROJECT is no longer necessary."
-	fi
-
-	if [[ ${EGIT_BOOTSTRAP} ]]; then
-		eerror "EGIT_BOOTSTRAP has been removed. Please create proper src_prepare()"
-		eerror "instead."
-		die "EGIT_BOOTSTRAP has been removed."
-	fi
-
-	if [[ ${EGIT_NOUNPACK} ]]; then
-		eerror "EGIT_NOUNPACK has been removed. The eclass no longer calls default"
-		eerror "unpack function. If necessary, please declare proper src_unpack()."
-		die "EGIT_NOUNPACK has been removed."
 	fi
 }
 
@@ -399,16 +353,22 @@ _git-r3_set_gitdir() {
 }
 
 # @FUNCTION: _git-r3_set_submodules
-# @USAGE: <file-contents>
+# @USAGE: <parent-path> <file-contents>
 # @INTERNAL
 # @DESCRIPTION:
 # Parse .gitmodules contents passed as <file-contents>
 # as in "$(cat .gitmodules)"). Composes a 'submodules' array that
 # contains in order (name, URL, path) for each submodule.
+#
+# <parent-path> specifies path to current submodule (empty if top repo),
+# and is used to support recursively specifying submodules.  The path
+# must include a trailing slash if it's not empty.
 _git-r3_set_submodules() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	local data=${1}
+	local parent_path=${1}
+	local data=${2}
+	[[ -z ${parent_path} || ${parent_path} == */ ]] || die
 
 	# ( name url path ... )
 	submodules=()
@@ -433,12 +393,14 @@ _git-r3_set_submodules() {
 					l_res=1
 				fi
 
-				[[ ${subname} == ${p} ]] && res=${l_res}
+				[[ ${parent_path}${subname} == ${p} ]] && res=${l_res}
 			done
 
 			if [[ ! ${res} ]]; then
-				einfo "Skipping submodule \e[1m${subname}\e[22m"
+				einfo "Skipping submodule ${parent_path}${subname}"
 				continue
+			else
+				einfo "Using submodule ${parent_path}${subname}"
 			fi
 		fi
 
@@ -544,7 +506,7 @@ _git-r3_is_local_repo() {
 # This default should be fine unless you are fetching multiple trees
 # from the same repository in the same ebuild.
 #
-# <commit-id> requests attempting to use repository state as of specific
+# <commit-date> requests attempting to use repository state as of specific
 # date. For more details, see EGIT_COMMIT_DATE.
 #
 # The fetch operation will affect the EGIT_STORE only. It will not touch
@@ -553,6 +515,9 @@ _git-r3_is_local_repo() {
 # recursively.
 git-r3_fetch() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	# disable password prompts, https://bugs.gentoo.org/701276
+	local -x GIT_TERMINAL_PROMPT=0
 
 	# process repos first since we create repo_name from it
 	local repos
@@ -595,7 +560,7 @@ git-r3_fetch() {
 	local commit_date=${4:-${EGIT_COMMIT_DATE}}
 
 	# support new override API for EAPI 6+
-	if ! has "${EAPI:-0}" 0 1 2 3 4 5; then
+	if [[ ${EAPI} != 5 ]]; then
 		# get the name and do some more processing:
 		# 1) kill .git suffix,
 		# 2) underscore (remaining) non-variable characters,
@@ -653,7 +618,7 @@ git-r3_fetch() {
 	fi
 	for r in "${repos[@]}"; do
 		if [[ ! ${EVCS_OFFLINE} ]]; then
-			einfo "Fetching \e[1m${r}\e[22m ..."
+			einfo "Fetching ${r} ..."
 
 			local fetch_command=( git fetch "${r}" )
 			local clone_type=${EGIT_CLONE_TYPE}
@@ -667,6 +632,8 @@ git-r3_fetch() {
 					"+refs/tags/*:refs/tags/*"
 					# notes in case something needs them
 					"+refs/notes/*:refs/notes/*"
+					# pullrequest refs are useful for testing incoming changes
+					"+refs/pull/*/head:refs/pull/*"
 					# and HEAD in case we need the default branch
 					# (we keep it in refs/git-r3 since otherwise --prune interferes)
 					"+HEAD:refs/git-r3/HEAD"
@@ -812,7 +779,7 @@ git-r3_fetch() {
 	# recursively fetch submodules
 	if git cat-file -e "${local_ref}":.gitmodules &>/dev/null; then
 		local submodules
-		_git-r3_set_submodules \
+		_git-r3_set_submodules "${_GIT_SUBMODULE_PATH}" \
 			"$(git cat-file -p "${local_ref}":.gitmodules || die)"
 
 		while [[ ${submodules[@]} ]]; do
@@ -834,7 +801,9 @@ git-r3_fetch() {
 				local subrepos
 				_git-r3_set_subrepos "${url}" "${repos[@]}"
 
-				git-r3_fetch "${subrepos[*]}" "${commit}" "${local_id}/${subname}"
+				_GIT_SUBMODULE_PATH=${_GIT_SUBMODULE_PATH}${path}/ \
+				git-r3_fetch "${subrepos[*]}" "${commit}" \
+					"${local_id}/${subname}" ""
 			fi
 
 			submodules=( "${submodules[@]:3}" ) # shift
@@ -887,7 +856,7 @@ git-r3_checkout() {
 	local -x GIT_DIR
 	_git-r3_set_gitdir "${repos[0]}"
 
-	einfo "Checking out \e[1m${repos[0]}\e[22m to \e[1m${out_dir}\e[22m ..."
+	einfo "Checking out ${repos[0]} to ${out_dir} ..."
 
 	if ! git cat-file -e refs/git-r3/"${local_id}"/__main__; then
 		die "Logic error: no local clone of ${repos[0]}. git-r3_fetch not used?"
@@ -970,7 +939,7 @@ git-r3_checkout() {
 	# recursively checkout submodules
 	if [[ -f ${out_dir}/.gitmodules && ! ${checkout_paths} ]]; then
 		local submodules
-		_git-r3_set_submodules \
+		_git-r3_set_submodules "${_GIT_SUBMODULE_PATH}" \
 			"$(<"${out_dir}"/.gitmodules)"
 
 		while [[ ${submodules[@]} ]]; do
@@ -984,6 +953,7 @@ git-r3_checkout() {
 				local subrepos
 				_git-r3_set_subrepos "${url}" "${repos[@]}"
 
+				_GIT_SUBMODULE_PATH=${_GIT_SUBMODULE_PATH}${path}/ \
 				git-r3_checkout "${subrepos[*]}" "${out_dir}/${path}" \
 					"${local_id}/${subname}"
 			fi
@@ -1037,7 +1007,7 @@ git-r3_peek_remote_ref() {
 
 	local r success
 	for r in "${repos[@]}"; do
-		einfo "Peeking \e[1m${remote_ref}\e[22m on \e[1m${r}\e[22m ..." >&2
+		einfo "Peeking ${remote_ref} on ${r} ..." >&2
 
 		local lookup_ref
 		if [[ ${remote_ref} == refs/* || ${remote_ref} == HEAD ]]
@@ -1093,9 +1063,9 @@ git-r3_pkg_needrebuild() {
 	[[ ${new_commit_id} && ${EGIT_VERSION} ]] || die "Lookup failed"
 
 	if [[ ${EGIT_VERSION} != ${new_commit_id} ]]; then
-		einfo "Update from \e[1m${EGIT_VERSION}\e[22m to \e[1m${new_commit_id}\e[22m"
+		einfo "Update from ${EGIT_VERSION} to ${new_commit_id}"
 	else
-		einfo "Local and remote at \e[1m${EGIT_VERSION}\e[22m"
+		einfo "Local and remote at ${EGIT_VERSION}"
 	fi
 
 	[[ ${EGIT_VERSION} != ${new_commit_id} ]]

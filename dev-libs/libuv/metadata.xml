@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="project">
-		<email>kde@gentoo.org</email>
-		<name>Gentoo KDE Project</name>
-	</maintainer>
-	<maintainer type="person">
-		<email>jer@gentoo.org</email>
-	</maintainer>
-	<longdescription lang="en">
+ <maintainer type="project">
+  <email>kde@gentoo.org</email>
+  <name>Gentoo KDE Project</name>
+ </maintainer>
+ <maintainer type="person">
+  <email>jakov.smolic@sartura.hr</email>
+  <name>Jakov Smolic</name>
+ </maintainer>
+ <longdescription lang="en">
 		libuv is a platform layer for node.js. Its purpose is to abstract
 		IOCP on Windows and epoll/kqueue/event ports/etc. on Unix systems.
 		We intend to eventually contain all platform differences in this
@@ -30,11 +31,13 @@
 			FSEvents and ReadDirectoryChangesW
 			* IPC and socket sharing between processes uv_write2
 	</longdescription>
-	<upstream>
-		<bugs-to>https://github.com/libuv/libuv/issues</bugs-to>
-		<remote-id type="github">libuv/libuv</remote-id>
-	</upstream>
-	<slots>
-		<subslots>Reflect ABI compatibility of libuv.so.</subslots>
-	</slots>
+ <upstream>
+  <remote-id type="github">libuv/libuv</remote-id>
+  <remote-id type="cpe">cpe:/a:libuv:libuv</remote-id>
+  <bugs-to>https://github.com/libuv/libuv/issues</bugs-to>
+ </upstream>
+ <origin>gentoo-staging</origin>
+ <slots>
+  <subslots>Reflect ABI compatibility of libuv.so.</subslots>
+ </slots>
 </pkgmetadata>

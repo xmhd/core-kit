@@ -1,15 +1,17 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>williamh@gentoo.org</email>
-		<name>William Hubbs</name>
-	</maintainer>
-	<maintainer type="project">
-		<email>openrc@gentoo.org</email>
-		<name>Gentoo OpenRC Team</name>
-	</maintainer>
-	<upstream>
-		<remote-id type="github">openrc/opentmpfiles</remote-id>
-	</upstream>
+ <maintainer type="person">
+  <email>williamh@gentoo.org</email>
+  <name>William Hubbs</name>
+ </maintainer>
+ <maintainer type="project">
+  <email>openrc@gentoo.org</email>
+  <name>Gentoo OpenRC Team</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="github">openrc/opentmpfiles</remote-id>
+  <remote-id type="cpe">cpe:/a:openr:opentmpfiles</remote-id>
+ </upstream>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

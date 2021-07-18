@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>naota@gentoo.org</email>
-	</maintainer>
-	<longdescription lang="en">
+ <maintainer type="person">
+  <email>naota@gentoo.org</email>
+ </maintainer>
+ <longdescription lang="en">
 NILFS is a new implementation of a log-structured file system for the
 Linux 2.6 operating system. Conventional features of a log-structured
 file systems (LFS) are high write performance and fast recovery time.
@@ -19,7 +19,8 @@ managed by a B-tree structure, internal data are processed in 64 bit
 wide word size. The B-tree structure enables ``NILFS'' to create and
 store huge files.
 	</longdescription>
-	<upstream>
-		<remote-id type="sourceforge">nilfs</remote-id>
-	</upstream>
+ <upstream>
+  <remote-id type="sourceforge">nilfs</remote-id>
+ </upstream>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

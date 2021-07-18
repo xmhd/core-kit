@@ -11,11 +11,13 @@ SRC_URI="https://github.com/rvoicilas/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 arm ~arm64 hppa ~mips sparc x86"
+KEYWORDS="amd64 arm ~arm64 ~hppa ~mips sparc x86"
 IUSE="doc"
 
 DEPEND="doc? ( app-doc/doxygen )"
 RDEPEND=""
+
+PATCHES=( "${FILESDIR}/${P}-rm-unused-cmd-arg.patch" )
 
 src_prepare() {
 	default

@@ -7,29 +7,30 @@ app-admin/syslog-ng:amqp - Enable support for AMQP destinations
 app-admin/syslog-ng:geoip2 - Add support for geo lookup based on IPs via dev-libs/libmaxminddb
 app-admin/syslog-ng:http - Enable support for HTTP destinations
 app-admin/syslog-ng:json - Enable support for JSON template formatting via dev-libs/json-c
+app-admin/syslog-ng:kafka - Enable support for Kafka destinations
 app-admin/syslog-ng:mongodb - Enable support for mongodb destinations
 app-admin/syslog-ng:pacct - Enable support for reading Process Accounting files (EXPERIMENTAL, Linux only)
 app-admin/syslog-ng:redis - Enable support for Redis destinations
 app-admin/syslog-ng:smtp - Enable support for SMTP destinations
 app-admin/syslog-ng:spoof-source - Enable support for spoofed source addresses
 app-arch/gzip:pic - disable optimized assembly code that is not PIC friendly
+app-arch/libarchive:blake2 - Enable Blake2 hash support via app-crypt/libb2.
 app-arch/libarchive:bzip2 - Allow accessing bzip2-compressed archives through libbz2 (which comes with app-arch/bzip2). This only affects libarchive's native support: bsdtar will keep using bunzip2 as a filter if that's not built-in.
 app-arch/libarchive:e2fsprogs - Use file flags from sys-fs/e2fsprogs headers instead of virtual/os-headers headers
-app-arch/libarchive:lz4 - Enable support for LZ4 compression using app-arch/lz4
 app-arch/libarchive:nettle - Use dev-libs/nettle as crypto backend
 app-arch/libarchive:zlib - Allow accessing gzip-compressed archives through sys-libs/zlib. This only affects libarchive's native support: bsdtar will keep using gunzip as a filter if that's not built-in. It's also needed for supporting extraction of ZIP files.
-app-arch/libarchive:zstd - Enable support for zstd compression using app-arch/zstd
 app-arch/tar:minimal - just install `tar`
 app-arch/unzip:natspec - Use dev-libs/libnatspec to correctly decode non-ascii file names archived in Windows.
 app-arch/xz-utils:extra-filters - Build additional filters that are not used in any of the default xz presets. This includes delta and BCJ coders, additional match finders and SHA256 checks.
 app-arch/zip:natspec - Use dev-libs/libnatspec to correctly decode non-ascii file names archived in Windows.
-app-crypt/gnupg:mta - Build mta support using virtual/mta.
+app-crypt/gnupg:scd-shared-access - Allow concurrent access to scdaemon by multiple apps from same user. Useful if you want to use scdaemon with gnupg and for example NitroKey.
 app-crypt/gnupg:smartcard - Build scdaemon software. Enables usage of OpenPGP cards. For other type of smartcards, try app-crypt/gnupg-pkcs11-scd. Bring in dev-libs/libusb as a dependency; enable scdaemon.
 app-crypt/gnupg:tofu - Enable support for Trust on First use trust model; requires dev-db/sqlite.
 app-crypt/gnupg:tools - Install extra tools (including gpgsplit and gpg-zip).
 app-crypt/gnupg:usb - Build direct CCID access for scdaemon; requires dev-libs/libusb.
 app-crypt/gnupg:user-socket - try a socket directory which is not removed by init manager at session end
 app-crypt/gnupg:wks-server - Install the wks-server
+app-crypt/pinentry:efl - Build dev-libs/efl based pinentry
 app-doc/doxygen:clang - support for sys-devel/clang assisted parsing
 app-doc/doxygen:dot - allow to create dot graphs using media-gfx/graphviz
 app-doc/doxygen:doxysearch - build doxyindexer and doxysearch.cgi
@@ -37,18 +38,17 @@ app-editors/nano:debug - Enable debug messages and assert warnings. Note that th
 app-editors/nano:justify - Enable justify/unjustify functions for text formatting.
 app-editors/nano:magic - Add magic file support (sys-apps/file) to automatically detect appropriate syntax highlighting
 app-editors/nano:minimal - Disable all fancy features, including ones that otherwise have a dedicated USE flag (such as spelling).
+app-editors/nano:split-usr - Enable this if /bin and /usr/bin are separate directories
 app-emulation/lxc:apparmor - Enable AppArmor support
-app-emulation/lxc:cgmanager - Enable support for cgroup management using app-admin/cgmanager
-app-emulation/lxc:templates - Install old style templates through app-emulation/lxc-templates
-app-emulation/lxd:daemon - Build the system daemon, not just the client tool
-app-emulation/lxd:dnsmasq - Depend on dnsmasq to provide DHCP and DNS
-app-emulation/lxd:tools - Build and install optional tools
+app-emulation/lxc:tools - Build and install additional command line tools
+app-emulation/lxd:apparmor - Enable AppArmor support
 app-eselect/eselect-php:fpm - Enable the FastCGI Process Manager SAPI
 app-misc/pax-utils:python - Install a more powerful/faster version of lddtree
 app-misc/screen:multiuser - Enable multiuser support (by setting correct permissions)
 app-misc/screen:nethack - Express error messages in nethack style
-app-misc/screen:utmp - Include utmp support
 app-misc/tmux:utempter - Include libutempter support
+app-portage/portage-utils:qmanifest - Build qmanifest applet, this adds additional dependencies for GPG, OpenSSL and BLAKE2B hashing
+app-portage/portage-utils:qtegrity - Build qtegrity applet, this adds additional dependencies for OpenSSL
 app-shells/bash:bashlogger - Log ALL commands typed into bash; should ONLY be used in restricted environments such as honeypots
 app-shells/bash:mem-scramble - Build with custom malloc/free overwriting allocated/freed memory
 app-shells/bash:net - Enable /dev/tcp/host/port redirection
@@ -58,17 +58,29 @@ dev-libs/boost:context - Build and install the Boost.Context (and Boost.Fiber) l
 dev-libs/boost:debug - Build and install only the debug version of the Boost libraries. Only enable this flag if you're developing against boost.
 dev-libs/boost:doc - Install the full API documentation documentation. This takes over 200MB of extra disk space.
 dev-libs/boost:nls - Build libboost_locale. This library requires compatible C library interfaces, which might not be provided by uClibc or other embedded libraries.
+dev-libs/boost:numpy - Optionally build NumPy extensions when Boost.Python is enabled
 dev-libs/boost:threads - Build multi-thread-compatible libraries instead of single-threaded only.
 dev-libs/boost:tools - Build and install the boost tools (bcp, quickbook, inspect, wave)
 dev-libs/check:subunit - Enable support for the subunit unit test protocol
 dev-libs/elfutils:lzma - Support automatic decompression of LZMA-compressed files and kernel images
 dev-libs/elfutils:threads - Build the libraries with thread safe support
 dev-libs/elfutils:utils - Install command-line utilities (all the eu-* programs)
+dev-libs/elfutils:valgrind - Add support for memory debugging using dev-util/valgrind
 dev-libs/gmp:asm - Enable use of hand optimized assembly routines (faster execution)
-dev-libs/libevent:debug - Support runtime debug mode and malloc hooks (for programmers)
-dev-libs/libffi:pax_kernel - Use PaX emulated trampolines, for we can't use PROT_EXEC
+dev-libs/gmp:pic - Force static libraries to be built as PIC to avoid TEXTRELs.
+dev-libs/libevent:clock-gettime - Disable use of clock_gettime even if it is available
+dev-libs/libevent:debug - Support for running in debug mode
+dev-libs/libevent:malloc-replacement - Support for replacing the memory management functions
+dev-libs/libevent:mbedtls - Support for net-libs/mbedtls encryption
+dev-libs/libevent:ssl - Support for dev-libs/openssl encryption
+dev-libs/libevent:verbose-debug - Support for verbose debug logging
+dev-libs/libffi:exec-static-trampoline - Don't rely on dynamic code generation for trampolines.
+dev-libs/libffi:pax-kernel - Use PaX emulated trampolines, for we can't use PROT_EXEC
+dev-libs/libffi:pax_kernel - DEPRECATED alias for 'pax-kernel'. Do not use.
+dev-libs/libgcrypt:asm - Enable assembly for optimization
 dev-libs/libgcrypt:o-flag-munging - Enable O-flag mangling during build
 dev-libs/libgpg-error:common-lisp - Install common-lisp files
+dev-libs/libical:glib - Enable dev-libs/glib interface support
 dev-libs/libnl:doc - Install development documentation
 dev-libs/libnl:python - Install experimental dev-lang/python bindings
 dev-libs/libnl:utils - Install command line interface utils
@@ -87,11 +99,12 @@ dev-libs/libpcre2:zlib - Add support for pcregrep command to search within gzip-
 dev-libs/libtasn1:valgrind - Enable usage of dev-util/valgrind in debug
 dev-libs/openssl:asm - Support assembly hand optimized crypto functions (i.e. faster run time)
 dev-libs/openssl:bindist - Disable/Restrict EC algorithms (as they seem to be patented) -- note: changes the ABI
+dev-libs/openssl:ktls - Enable support for Kernel implementation of TLS (kTLS)
 dev-libs/openssl:rfc3779 - Enable support for RFC 3779 (X.509 Extensions for IP Addresses and AS Identifiers)
 dev-libs/openssl:sslv2 - Support for the old/insecure SSLv2 protocol -- note: not required for TLS/https
 dev-libs/openssl:sslv3 - Support for the old/insecure SSLv3 protocol -- note: not required for TLS/https
 dev-libs/openssl:tls-heartbeat - Enable the Heartbeat Extension in TLS and DTLS
-dev-util/cmake:server - Enable cmake-server support.
+dev-util/ccache:static-c++ - Avoid dynamic dependency on gcc's libstdc++.
 dev-util/cmake:system-jsoncpp - Use system copy of dev-libs/jsoncpp instead of bundled one.
 dev-util/ctags:json - Enable JSON output support
 dev-util/ctags:xml - Enable XML parsing support
@@ -105,6 +118,7 @@ dev-vcs/git:highlight - GitWeb support for app-text/highlight
 dev-vcs/git:mediawiki - Support pulling and pushing from MediaWiki
 dev-vcs/git:mediawiki-experimental - Add experimental patches for improved MediaWiki support
 dev-vcs/git:pcre-jit - Enable JIT for pcre
+dev-vcs/git:perforce - Add support for Perforce version control system (requires manual installation of Perforce client)
 dev-vcs/git:ppcsha1 - Make use of a bundled routine that is optimized for the PPC arch
 dev-vcs/git:subversion - Include git-svn for dev-vcs/subversion support
 dev-vcs/git:tk - Include the 'gitk' and 'git gui' tools
@@ -114,34 +128,27 @@ mail-mta/postfix:eai - Add support for SMTPUTF8
 mail-mta/postfix:ldap-bind - Add support for binding to LDAP backend using dev-libs/cyrus-sasl
 mail-mta/postfix:lmdb - Add support for using dev-db/lmdb for lookup tables
 mail-mta/postfix:memcached - Add support for using net-misc/memcached for lookup tables
-mail-mta/postfix:vda - Add support for virtual delivery agent quota enforcing
 net-dialup/ppp:activefilter - Enables active filter support
-net-dialup/ppp:atm - Enables ATM (Asynchronous Transfer Mode) protocol support
 net-dialup/ppp:dhcp - Installs PPP DHCP client plugin for IP address allocation by a DHCP server (see http://www.netservers.co.uk/gpl/)
 net-dialup/ppp:eap-tls - Enables support for Extensible Authentication Protocol and Transport Level Security (see http://www.nikhef.nl/~janjust/ppp/index.html)
 net-dialup/ppp:gtk - Installs GTK+ password prompting program that can be used by passprompt.so PPP plugin for reading the password from a X11 input terminal
-net-dialup/ppp:ipv6 - Enables support for IP version 6
-net-dialup/ppp:pam - Enables PAM (Pluggable Authentication Modules) support
 net-dialup/ppp:radius - Enables RADIUS support
 net-dns/avahi:autoipd - Build and install the IPv4LL (RFC3927) network address configuration daemon
-net-dns/avahi:bookmarks - Install the avahi-bookmarks application (requires dev-python/twisted-core and dev-python/twisted-web)
-net-dns/avahi:gtk3 - Build the avahi-ui-gtk3 library, and use gtk3 for the avahi utilities under USE=utils
+net-dns/avahi:bookmarks - Install the avahi-bookmarks application (requires dev-python/twisted)
+net-dns/avahi:gtk - Use gtk3 for the avahi utilities to build the avahi-ui-gtk3 library
 net-dns/avahi:howl-compat - Enable compat libraries for howl
 net-dns/avahi:mdnsresponder-compat - Enable compat libraries for mDNSResponder
-net-dns/avahi:utils - Install the avahi gtk+ utils avahi-discover, bssh, and bvnc
-net-dns/bind-tools:gost - Enables gost OpenSSL engine support
 net-dns/bind-tools:gssapi - Enable gssapi support
-net-dns/bind-tools:libidn2 - Enables IDN support using net-dns/libidn2 rather than using net-dns/idnkit
-net-dns/bind-tools:urandom - Use /dev/urandom instead of /dev/random
 net-firewall/ebtables:perl - Install the ebtables-save script which uses perl
 net-firewall/iptables:conntrack - Build against net-libs/libnetfilter_conntrack when enables the connlabel matcher
 net-firewall/iptables:netlink - Build against libnfnetlink which enables the nfnl_osf util
 net-firewall/iptables:nftables - Support nftables kernel interface
 net-firewall/iptables:pcap - Build against net-libs/libpcap which enables the nfbpf_compile util
+net-firewall/nftables:doc - Create man pages for the package (requires app-text/asciidoc)
 net-firewall/nftables:json - Enable JSON support via dev-libs/jansson
-net-firewall/nftables:modern_kernel - Install init scripts for 3.18 or higher kernels with atomic rule updates
+net-firewall/nftables:modern-kernel - Install init scripts for 3.18 or higher kernels with atomic rule updates
+net-firewall/nftables:xtables - Add libxtables support to try to automatically translate rules added by iptables-compat
 net-libs/gnutls:dane - Build libgnutls-dane, implementing DNS-based Authentication of Named Entities. Requires net-dns/unbound
-net-libs/gnutls:openpgp - Enable openpgp support
 net-libs/gnutls:openssl - Build openssl compatibility libraries
 net-libs/gnutls:pkcs11 - Add support for PKCS#11 through app-crypt/p11-kit
 net-libs/gnutls:sslv2 - Support for the old/insecure SSLv2 protocol
@@ -156,25 +163,42 @@ net-libs/libproxy:spidermonkey - Use libmozjs from dev-lang/spidermonkey for PAC
 net-libs/libproxy:webkit - Use libjavascriptcoregtk from net-libs/webkit-gtk for PAC parsing
 net-libs/neon:libproxy - Add support for net-libs/libproxy
 net-libs/neon:pkcs11 - Add support for PKCS#11 using dev-libs/pakchois
+net-misc/curl:alt-svc - Enable alt-svc support
 net-misc/curl:brotli - Enable brotli compression support
-net-misc/curl:http2 - Enabled HTTP/2.0 support
+net-misc/curl:ftp - Enable FTP support
+net-misc/curl:gnutls - Enable gnutls ssl backend
+net-misc/curl:gopher - Enable Gopher protocol support
+net-misc/curl:hsts - Enable HTTP Strict Transport Security
+net-misc/curl:http2 - Enable HTTP/2.0 support
+net-misc/curl:imap - Enable Internet Message Access Protocol support
+net-misc/curl:mbedtls - Enable mbedtls ssl backend
 net-misc/curl:metalink - Enable metalink support
+net-misc/curl:nghttp3 - Enable HTTP/3.0 support using net-libs/nghttp3 and net-libs/ngtcp2
+net-misc/curl:nss - Enable nss ssl backend
+net-misc/curl:openssl - Enable openssl ssl backend
+net-misc/curl:pop3 - Enable Post Office Protocol 3 support
+net-misc/curl:progress-meter - Enable the progress meter
+net-misc/curl:quiche - Enable HTTP/3.0 support using net-libs/quiche
 net-misc/curl:rtmp - Enable RTMP Streaming Media support
-net-misc/curl:ssh - Enabled SSH urls in curl using libssh2
+net-misc/curl:smtp - Enable Simple Mail Transfer Protocol support
+net-misc/curl:ssh - Enable SSH urls in curl using libssh2
 net-misc/curl:ssl - Enable crypto engine support (via openssl if USE='-gnutls -nss')
+net-misc/curl:sslv3 - Support for the old/insecure SSLv3 protocol
+net-misc/curl:telnet - Enable Telnet protocol support
+net-misc/curl:tftp - Enable TFTP support
+net-misc/curl:winssl - Enable winssl ssl backend
+net-misc/curl:zstd - Enable zstd compression
 net-misc/dhcp:client - Install the dhclient program
 net-misc/dhcp:server - Install the dhcpd and dhcrelay programs
-net-misc/iputils:SECURITY_HAZARD - Allow non-root users to flood (ping -f). This is generally a very bad idea.
 net-misc/iputils:arping - Build and install arping -- tool for sending ARP requests to peers (see also net-analyzer/arping)
 net-misc/iputils:clockdiff - Build and install clockdiff -- tool for comparing clocks via ICMP packets
 net-misc/iputils:gcrypt - Use dev-libs/libgcrypt for md5 support
 net-misc/iputils:nettle - Use dev-libs/nettle for md5 support
-net-misc/iputils:openssl - Use dev-libs/openssl for md5 support
 net-misc/iputils:rarpd - Build and install rarpd -- server for handling RARP (reverse ARP) requests; generally only used by old systems
 net-misc/iputils:rdisc - Build and install rdisc -- server for the client side of the ICMP router discover protocol
 net-misc/iputils:tftpd - Build and install tftpd -- server for the Trivial File Transfer Protocol (see also net-ftp/tftp-hpa)
 net-misc/iputils:tracepath - Build and install tracepath -- tool for tracing network paths for discovering MTU values
-net-misc/iputils:traceroute - Build and install traceroute -- tool for tracing network paths (see also net-analyzer/traceroute)
+net-misc/iputils:traceroute6 - Build and install deprecated traceroute6 tool. It's recommended to use net-analyzer/traceroute instead.
 net-misc/mosh:client - Build network client
 net-misc/mosh:examples - Include example scripts
 net-misc/mosh:mosh-hardening - Enable compiler and linker options to frustrate memory corruption exploits
@@ -184,42 +208,52 @@ net-misc/mosh:utempter - Include libutempter support
 net-misc/ntp:openntpd - Allow ntp to be installed alongside openntpd
 net-misc/ntp:parse-clocks - Add support for PARSE clocks
 net-misc/ntp:samba - Provide support for Samba's signing daemon (needed for Active Directory domain controllers)
-net-misc/openntpd:libressl - Enable HTTPS TLS time constraint support using dev-libs/libressl
+net-misc/openntpd:constraints - Enable HTTPS TLS time constraint support
 net-misc/openssh:X509 - Adds support for X.509 certificate authentication
 net-misc/openssh:bindist - Disable EC/RC5 algorithms in OpenSSL for patent reasons.
 net-misc/openssh:hpn - Enable high performance ssh
-net-misc/openssh:ldap - Add support for storing SSH public keys in LDAP
 net-misc/openssh:ldns - Use LDNS for DNSSEC/SSHFP validation.
 net-misc/openssh:livecd - Enable root password logins for live-cd environment.
-net-misc/openssh:ssh1 - Support the legacy/weak SSH1 protocol
+net-misc/openssh:scp - Enable scp command with known security problems. See bug 733802
+net-misc/openssh:security-key - Include builtin U2F/FIDO support
 net-misc/openssh:ssl - Enable additional crypto algorithms via OpenSSL
+net-misc/openssh:xmss - Enable XMSS post-quantum authentication algorithm
 net-misc/rsync:stunnel - Provide helper scripts for using rsync via >=net-misc/stunnel-4
+net-misc/rsync:system-zlib - Use system zlib instead of bundled one. This is incompatible with older rsync releases!
+net-misc/rsync:xxhash - Enable dev-libs/xxhash support for hashing
+net-misc/wget:cookie_check - Enable cookie checks via net-libs/libpsl
+net-misc/wget:metalink - Enable support for media-libs/libmetalink
 net-misc/wget:ntlm - Enable support for NTLM (Windows-based) authorization
 net-misc/wget:uuid - Generate UUIDs for the WARC (Web ARChive file format) using libuuid; otherwise use a simple RNG (random number generator)
+net-misc/whois:xcrypt - Enable crypt through sys-libs/libxcrypt package
 net-wireless/bluez:btpclient - Enable BTP client
 net-wireless/bluez:deprecated - Build deprecated plugins
 net-wireless/bluez:experimental - Build experimental plugins
 net-wireless/bluez:extra-tools - Install tools that upstream doesn't install on purpose by default. All this tools shouldn't be used. Then, please notify upstream about you still need them to let them know the situation.
 net-wireless/bluez:mesh - Add support for Bluetooth Mesh control application and advertising bearer.
-net-wireless/bluez:obex - Enable OBEX transfer support.
+net-wireless/bluez:midi - Enable MIDI support
+net-wireless/bluez:obex - Enable OBEX transfer support
 net-wireless/bluez:test-programs - Install tools for testing of various Bluetooth functions
 net-wireless/bluez:user-session - Allow compatibility with user-session semantics for session bus under systemd
 net-wireless/crda:gcrypt - Use libgcrypt instead of openssl for key checking
 net-wireless/wpa_supplicant:ap - Add support for access point mode
+net-wireless/wpa_supplicant:broadcom-sta - Flag to help users disable features not supported by broadcom-sta driver
 net-wireless/wpa_supplicant:eap-sim - Add support for EAP-SIM authentication algorithm
-net-wireless/wpa_supplicant:eapol_test - Build and install eapol_test binary
+net-wireless/wpa_supplicant:eapol-test - Build and install eapol_test binary
 net-wireless/wpa_supplicant:fasteap - Add support for FAST-EAP authentication algorithm
+net-wireless/wpa_supplicant:fils - Add support for Fast Initial Link Setup (802.11ai)
 net-wireless/wpa_supplicant:hs2-0 - Add support for 802.11u and Passpoint for HotSpot 2.0
+net-wireless/wpa_supplicant:macsec - Add support for wired macsec
+net-wireless/wpa_supplicant:mbo - Add support Multiband Operation
+net-wireless/wpa_supplicant:mesh - Add support for mesh mode
 net-wireless/wpa_supplicant:p2p - Add support for Wi-Fi Direct mode
 net-wireless/wpa_supplicant:privsep - Enable wpa_priv privledge separation binary
 net-wireless/wpa_supplicant:ps3 - Add support for ps3 hypervisor driven gelic wifi
 net-wireless/wpa_supplicant:smartcard - Add support for smartcards
-net-wireless/wpa_supplicant:suiteb - Enable enable NSA Suite B encryption
 net-wireless/wpa_supplicant:tdls - Add support for Tunneled Direct Link Setup (802.11z)
 net-wireless/wpa_supplicant:uncommon-eap-types - Add support for GPSK, SAKE, GPSK_SHA256, IKEV2 and EKE
 net-wireless/wpa_supplicant:wimax - Add support for Wimax EAP-PEER authentication algorithm
 net-wireless/wpa_supplicant:wps - Add support for Wi-Fi Protected Setup
-sys-apps/baselayout:split-usr - Enable this if /bin and /usr/bin are separate directories
 sys-apps/busybox:make-symlinks - Create all the appropriate symlinks in /bin and /sbin.
 sys-apps/busybox:math - Enable math support in gawk (requires libm)
 sys-apps/busybox:mdev - Create the appropriate symlink in /sbin and install mdev.conf and support files
@@ -234,18 +268,21 @@ sys-apps/coreutils:split-usr - Enable this if /bin and /usr/bin are separate dir
 sys-apps/dbus:elogind - Use sys-auth/elogind for session tracking.
 sys-apps/dbus:systemd - Build with sys-apps/systemd at_console support
 sys-apps/dbus:user-session - Enable user-session semantics for session bus under systemd
-sys-apps/debianutils:installkernel - Install /sbin/installkernel script (for Linux)
-sys-apps/gawk:forced-sandbox - Always enable --sandbox mode for simpler/secure runtime (disables e/r/w commands)
+sys-apps/debianutils:installkernel - Install /sbin/installkernel script (for Linux). installkernel is required whenever a kernel will be installed via make install
 sys-apps/gawk:mpfr - use mpfr for high precision arithmetic (-M / --bignum)
+sys-apps/groff:uchardet - Enable automatic encoding detection via app-i18n/uchardet
 sys-apps/hwids:net - Install the oui.txt and iab.txt databases
 sys-apps/hwids:pci - Install the pci.ids database
 sys-apps/hwids:udev - Install hwdb.d rules for udev
 sys-apps/hwids:usb - Install the usb.ids database
 sys-apps/iproute2:berkdb - build programs that use berkdb (just arpd)
+sys-apps/iproute2:bpf - Use dev-libs/libbpf
 sys-apps/iproute2:elf - support loading eBPF programs from ELFs (e.g. LLVM's eBPF backend)
 sys-apps/iproute2:iptables - include support for iptables filtering
+sys-apps/iproute2:libbsd - Use dev-libs/libbsd instead of internal funcs
 sys-apps/iproute2:minimal - only install ip and tc programs, without eBPF support
 sys-apps/kmod:lzma - Enable support for XZ compressed modules
+sys-apps/kmod:pkcs7 - Enable PKCS#7 signature parsing for modinfo.
 sys-apps/kmod:tools - Install module loading/unloading tools.
 sys-apps/kmod:zlib - Enable support for gzipped modules
 sys-apps/man-db:manpager - Enable manpager wrapper for colorizing output
@@ -256,41 +293,50 @@ sys-apps/net-tools:slattach - build the slattach tool (for working with old seri
 sys-apps/openrc:bash - enable the use of bash in service scripts (experimental)
 sys-apps/openrc:netifrc - enable Gentoo's network stack (net.* scripts)
 sys-apps/openrc:newnet - enable the new network stack (experimental)
+sys-apps/openrc:sysv-utils - Install sysvinit compatibility scripts for halt, init, poweroff, reboot and shutdown
 sys-apps/pciutils:dns - Enable support for querying the central database of PCI IDs using DNS
 sys-apps/pciutils:kmod - Enable sys-apps/kmod support for the -k switch in lspci command
 sys-apps/pciutils:zlib - Support compressed pci.ids database
+sys-apps/pcsc-lite:embedded - limit RAM and CPU ressources by disabling features
 sys-apps/pcsc-lite:libusb - Use dev-libs/libusb detection to hotplug new smartcard readers. This flag should only be enabled if you're running a non-Linux kernel or you don't want to use sys-fs/udev.
 sys-apps/pcsc-lite:policykit - Uses sys-auth/polkit to restrict access to smartcard readers or smartcars to given users.
-sys-apps/pcsc-lite:udev - Use sys-fs/udev rules to handle devices' permissions and hotplug support. Unless you know what you're doing do not disable this flag on Linux kernels. This is provided as an option for completeness.
-sys-apps/portage:epydoc - Build html API documentation with epydoc.
+sys-apps/pcsc-lite:udev - Use virtual/libudev rules to handle devices' permissions and hotplug support. Unless you know what you're doing do not disable this flag on Linux kernels. This is provided as an option for completeness.
+sys-apps/portage:apidoc - Build html API documentation with sphinx-apidoc.
 sys-apps/portage:gentoo-dev - Enable features required for Gentoo ebuild development.
 sys-apps/portage:ipc - Use inter-process communication between portage and running ebuilds.
 sys-apps/portage:native-extensions - Compiles native "C" extensions (speedups, instead of using python backup code). Currently includes libc-locales. This should only be temporarily disabled for some bootstrapping operations. Cross-compilation is not supported.
 sys-apps/portage:rsync-verify - Enable full-tree cryptographic verification of Gentoo repository rsync checkouts using app-portage/gemato.
 sys-apps/portage:xattr - Preserve extended attributes (filesystem-stored metadata) when installing files. Usually only required for hardened systems.
-sys-apps/sed:forced-sandbox - Always enable --sandbox mode for simpler/secure runtime (disables e/r/w commands). Note: This may break many configure scripts, so it should be avoided on dev systems (and generally used on binpkg/final systems only).
+sys-apps/shadow:bcrypt - build the bcrypt password encryption algorithm
+sys-apps/shadow:su - build the su program
 sys-apps/smartmontools:caps - Build against sys-libs/libcap-ng to allow smartd to drop its privileges.
 sys-apps/smartmontools:daemon - Install the monitoring daemon (smartd) and associated scripts.
-sys-apps/smartmontools:update_drivedb - Install a script to update the drivedb file.
+sys-apps/smartmontools:update-drivedb - Install a script to update the drivedb file.
 sys-apps/tcp-wrappers:netgroups - Support matching NIS (host) netgroup names via the @netgroup syntax (if you don't know what this means, you most likely do not need it)
+sys-apps/texinfo:standalone - Build standalone version that survives all Portage bugs
+sys-apps/util-linux:audit - Use sys-process/audit to emit audit messages about system changes
 sys-apps/util-linux:caps - build setpriv helper (run programs with diff capabilities)
 sys-apps/util-linux:cramfs - build mkfs/fsck helpers for cramfs filesystems
+sys-apps/util-linux:cryptsetup - Use sys-fs/cryptsetup to have built-in dm-verity in libmount
 sys-apps/util-linux:fdformat - build fdformat (floppy disk format)
+sys-apps/util-linux:hardlink - build hardlink program
 sys-apps/util-linux:kill - build the kill program
+sys-apps/util-linux:logger - build the logger program
 sys-apps/util-linux:pam - build runuser helper
+sys-apps/util-linux:su - build the su program
 sys-apps/util-linux:suid - install mount/umount as setuid so non-root users may mount/umount devices, and wall/write as setgid so non-root users can notify other users
 sys-apps/util-linux:tty-helpers - install the mesg/wall/write tools for talking to local users
-sys-auth/pambase:consolekit - Enable pam_ck_connector module on local system logins. This allows for console logins to make use of ConsoleKit authorization.
-sys-auth/pambase:cracklib - Enable pam_cracklib module on system authentication stack. This produces warnings when changing password to something easily crackable. It requires the same USE flag to be enabled on sys-libs/pam or system login might be impossible.
 sys-auth/pambase:debug - Enable debug information logging on syslog(3) for all the modules supporting this in the system authentication and system login stacks.
 sys-auth/pambase:elogind - Use pam_elogind module to register user sessions with elogind.
-sys-auth/pambase:gnome-keyring - Enable pam_gnome_keyring module on system login stack. This enables proper Gnome Keyring access to logins, whether they are done with the login shell, a Desktop Manager or a remote login systems such as SSH.
-sys-auth/pambase:minimal - Disables the standard PAM modules that provide extra information to users on login; this includes pam_tally (and pam_tally2 for Linux PAM 1.1 and later), pam_lastlog, pam_motd and other similar modules. This might not be a good idea on a multi-user system but could reduce slightly the overhead on single-user non-networked systems.
+sys-auth/pambase:homed - Use pam_systemd_home module to manage home directories with the systemd-homed service
+sys-auth/pambase:minimal - Disables the standard PAM modules that provide extra information to users on login; this includes pam_lastlog, pam_motd, pam_mail and other similar modules. This might not be a good idea on a multi-user system but could reduce slightly the overhead on single-user non-networked systems.
 sys-auth/pambase:mktemp - Enable pam_mktemp module on system auth stack for session handling. This module creates a private temporary directory for the user, and sets TMP and TMPDIR accordingly.
 sys-auth/pambase:nullok - Enable the nullok option with the pam_unix module. This allows people to login with blank passwords.
 sys-auth/pambase:pam_krb5 - Enable pam_krb5 module on system auth stack, as an alternative to pam_unix. If Kerberos authentication succeed, only pam_unix will be ignore, and all the other modules will proceed as usual, including Gnome Keyring and other session modules. It requires sys-libs/pam as PAM implementation.
 sys-auth/pambase:pam_ssh - Enable pam_ssh module on system auth stack for authentication and session handling. This module will accept as password the passphrase of a private SSH key (one of ~/.ssh/id_rsa, ~/.ssh/id_dsa or ~/.ssh/identity), and will spawn an ssh-agent instance to cache the open key.
-sys-auth/pambase:passwdqc - Enable pam_passwdqc module on system auth stack for password quality validation. This is an alternative to pam_cracklib producing warnings, rejecting or providing example passwords when changing your system password. It is used by default by OpenWall GNU/*/Linux and by FreeBSD.
+sys-auth/pambase:passwdqc - Enable pam_passwdqc module on system auth stack for password quality validation. This module produces warnings, rejecting or providing example passwords when changing your system password. It is used by default by OpenWall GNU/*/Linux and by FreeBSD.
+sys-auth/pambase:pwhistory - Enable pam_pwhistory module on system auth stack to save the last passwords for each user in order to force password change history and keep the user from alternating between the same password too frequently.
+sys-auth/pambase:pwquality - Enable pam_pwquality module on system auth stack for passwd quality validation. It is used be dafault by Fedora GNU/*/Linux.
 sys-auth/pambase:securetty - Enable pam_securetty module in the login stack. Not generally relevant anymore as the login stack only refers to local logins and local terminals imply secure access in the first place.
 sys-auth/pambase:sha512 - Switch Linux-PAM's pam_unix module to use sha512 for passwords hashes rather than MD5. This option requires sys-libs/pam version 1.0.1 built against sys-libs/glibc version 2.7, if it's built against an earlier version, it will silently be ignored, and MD5 hashes will be used. All the passwords changed after this USE flag is enabled will be saved to the shadow file hashed using SHA512 function. The password previously saved will be left untouched. Please note that while SHA512-hashed passwords will still be recognised if the USE flag is removed, the shadow file will not be compatible with systems using an earlier glibc version.
 sys-auth/pambase:systemd - Use pam_systemd module to register user sessions in the systemd control group hierarchy.
@@ -301,13 +347,12 @@ sys-boot/grub:efiemu - Build and install the efiemu runtimes
 sys-boot/grub:fonts - Build and install fonts for the gfxterm module
 sys-boot/grub:libzfs - Enable support for sys-fs/zfs
 sys-boot/grub:mount - Build and install the grub-mount utility
-sys-boot/grub:multislot - Allow concurrent installation of sys-boot/grub SLOT 0 and sys-boot/grub SLOT 2 by renaming all programs.
 sys-boot/grub:themes - Build and install GRUB themes (starfield)
 sys-boot/grub:truetype - Build and install grub-mkfont conversion utility
 sys-boot/lilo:device-mapper - Enable support for device-mapper from sys-fs/lvm2
 sys-boot/lilo:minimal - Do not install the dolilo helper script
 sys-boot/lilo:pxeserial - Avoid character echo on PXE serial console
-sys-boot/plymouth:gdm - Enables smooth transition to GDM
+sys-boot/netboot:bootrom - Install the bootrom binary for creation of rom files, which can be used for booting via floppy or rom.
 sys-boot/plymouth:libkms - Provides abstraction to the DRM drivers (intel, nouveau and vmwgfx at this moment)
 sys-boot/plymouth:pango - Adds support for printing text on splash screen and text prompts, e.g. for password
 sys-boot/plymouth:split-usr - Enable this if /bin and /usr/bin are separate directories
@@ -319,62 +364,74 @@ sys-boot/refind:hfs - Builds the EFI binary hfs filesystem driver
 sys-boot/refind:iso9660 - Builds the EFI binary iso9660 filesystem driver
 sys-boot/refind:ntfs - Builds the EFI binary ntfs filesystem driver
 sys-boot/refind:reiserfs - Builds the EFI binary reiserfs filesystem driver
-sys-boot/woeusb:minimal - Install only woeusb tool
+sys-boot/silo:tilo-only - Install only the tilo netboot tool
+sys-boot/vboot-utils:libzip - Use dev-libs/libzip.
 sys-devel/autogen:libopts - install the libopts tarball (a few packages want this for developing)
-sys-devel/bc:forced-sandbox - Always enable --sandbox mode for simpler/secure runtime (disables the ! command in dc)
+sys-devel/binutils:cet - Enable Intel Control-flow Enforcement Technology.
 sys-devel/binutils:default-gold - Set ld to point to ld.gold instead of ld.bfd
 sys-devel/binutils:gold - Build ld.gold linker
 sys-devel/binutils:multitarget - Adds support to binutils for cross compiling (does not work with gas)
 sys-devel/binutils:plugins - Enable plugin support in tools
+sys-devel/binutils-config:native-symlinks - Install native symlinks like 'as' or 'ar' to /usr/bin. Otherwise keep only ${CTARGET}-as and friends.
+sys-devel/gcc:ada - Build the ADA language (GNAT) frontend
 sys-devel/gcc:awt - Useful only when building GCJ, this enables Abstract Window Toolkit (AWT) peer support on top of GTK+
-sys-devel/gcc:boundschecking - Add the bounds checking patch by Haj Ten Brugge, this will DISABLE the hardened PIE+SSP patches
 sys-devel/gcc:cilk - Support the Cilk Plus language (C/C++ based languages for parallel programming)
 sys-devel/gcc:d - Enable support for the D programming language
 sys-devel/gcc:fixed-point - Enable fixed-point arithmetic support for MIPS targets in gcc (Warning: significantly increases compile time!)
+sys-devel/gcc:gcj - Build the GCJ Java language frontend.
 sys-devel/gcc:go - Build the GCC Go language frontend.
 sys-devel/gcc:graphite - Add support for the framework for loop optimizations based on a polyhedral intermediate representation
 sys-devel/gcc:jit - Enable libgccjit so other applications can embed gcc for Just-In-Time compilation. This will slow down the compiler a bit as it forces all of the toolchain to be shared libs.
 sys-devel/gcc:libssp - Build SSP support into a dedicated library rather than use the code in the C library (DO NOT ENABLE THIS IF YOU DON'T KNOW WHAT IT DOES)
+sys-devel/gcc:lto - Build using Link Time Optimizations (LTO)
 sys-devel/gcc:mpx - Enable support for Intel Memory Protection Extensions (MPX)
-sys-devel/gcc:mudflap - Add support for mudflap, a pointer use checking library
-sys-devel/gcc:nopie - Disable PIE support (NOT FOR GENERAL USE)
-sys-devel/gcc:nossp - Disable SSP support (NOT FOR GENERAL USE)
+sys-devel/gcc:nptl - Enable support for Native POSIX Threads Library, the new threading module (requires linux-2.6 or better usually)
 sys-devel/gcc:objc - Build support for the Objective C code language
 sys-devel/gcc:objc++ - Build support for the Objective C++ language
 sys-devel/gcc:objc-gc - Build support for the Objective C code language Garbage Collector
 sys-devel/gcc:pgo - Build GCC using Profile Guided Optimization (PGO)
-sys-devel/gcc:regression-test - Run the testsuite and install the results (requires FEATURES=test)
 sys-devel/gcc:sanitize - Build support for various sanitizer functions (ASAN/TSAN/etc...)
 sys-devel/gcc:ssp - Build packages with stack smashing protector on by default
 sys-devel/gcc:systemtap - enable systemtap static probe points
+sys-devel/gcc:valgrind - Enable valgrind annotations for gcc internals (useful for gcc debugging).
 sys-devel/gcc:vtv - Build support for virtual table verification (a C++ hardening feature)
+sys-devel/gcc-config:cc-wrappers - Install and manage 'cc' and 'f77' wrappers in /usr/bin. Otherwise ignore them.
+sys-devel/gcc-config:native-symlinks - Install native symlinks like 'gcc' or 'g++' to /usr/bin. Otherwise keep only ${CTARGET}-gcc and friends.
 sys-devel/gettext:cvs - When running `autopoint`, use cvs to store the internal development files; this requires cvs at runtime, but will be faster/smaller than raw archives
 sys-devel/gettext:git - When running `autopoint`, use git to store the internal development files; this requires git at runtime, but will be faster/smaller than raw archives
 sys-fs/android-file-transfer-linux:fuse - Add FUSE mount helper
+sys-fs/android-file-transfer-linux:zune - Enable support for Microsoft Zune
+sys-fs/avfs:webdav - Allow mounting WebDAV shares via net-libs/neon
 sys-fs/bees:tools - Build extra tools useful for debugging (fiemap, fiewalk)
 sys-fs/btrfs-progs:convert - Build ext2 conversion utility (btrfs-convert)
 sys-fs/btrfs-progs:reiserfs - Enable reiserfs support in btrfs-convert tool.
 sys-fs/btrfs-progs:static - Build static binaries in addition to the dynamic ones
-sys-fs/btrfs-progs:zstd - Enable zstd compression support.
 sys-fs/btrfsmaintenance:systemd - Enable systemd services and timers instead of cron timers
 sys-fs/cryfs:custom-optimization - Use user-defined compiler optimization level
-sys-fs/cryfs:update-check - Enable automatic checking for updates and security vulnerabilities
+sys-fs/cryptmount:argv0switch - Default action given by progname.
+sys-fs/cryptmount:cswap - Enable support for encrypted swap.
+sys-fs/cryptmount:fsck - Check filesystems before mounting.
+sys-fs/cryptmount:gcrypt - Support libgcrypt-encryption of keys.
+sys-fs/cryptmount:largefile - Enable support for large files.
+sys-fs/cryptmount:luks - Enable key management via LUKS
+sys-fs/cryptmount:mount - Use systemd mount/umount for operations.
+sys-fs/cryptmount:openssl - Support openssl-encryption of keys.
 sys-fs/cryptsetup:argon2 - Enable password hashing algorithm from app-crypt/argon2
 sys-fs/cryptsetup:gcrypt - Use dev-libs/libgcrypt crypto backend
 sys-fs/cryptsetup:kernel - Use kernel crypto backend (mainly for embedded systems)
-sys-fs/cryptsetup:luks1_default - Default to LUKS1 on disk encryption format rather than new LUKS2
 sys-fs/cryptsetup:nettle - Use dev-libs/nettle crypto backend
 sys-fs/cryptsetup:openssl - Use dev-libs/openssl crypto backend
 sys-fs/cryptsetup:pwquality - Use dev-libs/libpwquality for password quality checking
 sys-fs/cryptsetup:reencrypt - Build cryptsetup-reencrypt
+sys-fs/cryptsetup:ssh - Build cryptsetup-ssh for experimental support of token via SSH-server
 sys-fs/cryptsetup:urandom - Use /dev/urandom instead of /dev/random
-sys-fs/dmraid:dietlibc - Compile against dev-libs/dietlibc
 sys-fs/dmraid:intel_led - Enable Intel LED support
-sys-fs/dmraid:klibc - Compile against dev-libs/klibc
 sys-fs/dmraid:led - Enable LED support
 sys-fs/dmraid:mini - Create a minimal binary suitable for early boot environments
 sys-fs/dosfstools:compat - Install symlinks for legacy names of the tools
+sys-fs/e2fsprogs:cron - Install e2scrub_all cron script
 sys-fs/e2fsprogs:fuse - Build fuse2fs, a FUSE file system client for ext2/ext3/ext4 file systems
+sys-fs/e2fsprogs:lto - Build with link time optimization (LTO)
 sys-fs/ecryptfs-utils:gpg - Enable app-crypt/gnupg key module
 sys-fs/ecryptfs-utils:openssl - Enable dev-libs/openssl key module
 sys-fs/ecryptfs-utils:pkcs11 - Enable PKCS#11 (Smartcards) key module
@@ -389,92 +446,80 @@ sys-fs/ext4magic:expert-mode - Builds ext4magic with expert mode. Highly useful 
 sys-fs/ext4magic:file-attr - Enable the recovery of file attributes (append, immutable, nodump etc)
 sys-fs/lessfs:filelog - Enable the ability to log to a file instead of syslog
 sys-fs/lessfs:memtrace - Enable leefs to create a report regarding the memory allocation. This feature should be used for debugging purposes to avoid performance degradation
-sys-fs/lessfs:snappy - Enable snappy compression using the app-arch/snappy library
-sys-fs/loop-aes:cpu_flags_x86_padlock - Use VIA padlock instructions, detected at run time, code still works on non-padlock processors
 sys-fs/loop-aes:extra-ciphers - Enable extra ciphers
 sys-fs/loop-aes:keyscrub - Protects the encryption key in memory but takes more cpu resources
 sys-fs/lvm2:device-mapper-only - Build only device-mapper and not the rest of LVM2 (UNSUPPORTED)
-sys-fs/lvm2:lvm1 - Allow users to build lvm2 with lvm1 support
 sys-fs/lvm2:lvm2create_initrd - Install lvm2create_initrd script and pull in sys-apps/makedev for the /sbin/MAKEDEV command
 sys-fs/lvm2:sanlock - Enable lvmlockd with support for sanlock
 sys-fs/lvm2:thin - Support for thin volumes
 sys-fs/mtpfs:mad - Enable handling of MP3's metadata
 sys-fs/multipath-tools:rbd - Enable Rados block device support via sys-cluster/ceph
-sys-fs/ntfs3g:external-fuse - Use external FUSE library instead of internal one. Must be disabled for unprivileged mounting to work.
 sys-fs/ntfs3g:ntfsdecrypt - Build and install the ntfsdecrypt application.
 sys-fs/ntfs3g:ntfsprogs - Include internal version of ntfsprogs.
-sys-fs/owfs:ftdi - Enable support for USB FTDI chips via dev-embedded/libftdi
-sys-fs/owfs:ftpd - Enable building the OWFS FTP server (owftpd)
-sys-fs/owfs:fuse - Enable building the FUSE-based OWFS client (owfs)
-sys-fs/owfs:httpd - Enable building the OWFS web server (owhttpd)
-sys-fs/owfs:parport - Enable support for the DS1410E parallel port adapter
-sys-fs/owfs:zeroconf - Enables support for zero-configuration networking via net-dns/avahi
 sys-fs/quota:netlink - Compile daemon receiving quota messages via netlink
 sys-fs/quota:rpc - Enable quota interaction via RPC
-sys-fs/squashfs-tools:lz4 - Enable support for LZ4 compression using app-arch/lz4
-sys-fs/squashfs-tools:xz - Enable support for XZ ("LZMA2") compression using app-arch/xz-utils
-sys-fs/squashfs-tools:zstd - Enable support for ZSTD compression using app-arch/zstd
-sys-fs/squashfuse:lz4 - Enable support for lz4 compression
-sys-fs/squashfuse:zstd - Enable support for zstd compression
+sys-fs/squashfs-tools-ng:tools - Build the gensquashfs, rdsquashfs, sqfs2tar, sqfsdiff, and tar2sqfs tools
+sys-fs/squashfs-tools-ng:xz - Enable support for XZ ("LZMA2") compression using app-arch/xz-utils
 sys-fs/udev:kmod - Enable kernel module loading/unloading support using sys-apps/kmod
 sys-fs/zfs:kernel-builtin - Disable dependency on sys-fs/zfs-kmod under the assumption that ZFS is part of the kernel source tree
+sys-fs/zfs:minimal - Don't install python scripts (arcstat, dbufstat etc) and avoid dependency on dev-lang/python
+sys-fs/zfs:pam - Install zfs_key pam module, for automatically loading zfs encryption keys for home datasets
 sys-fs/zfs:rootfs - Enable dependencies required for booting off a pool containing a rootfs
 sys-fs/zfs:test-suite - Install regression test suite
-sys-fs/zfs-auto-snapshot:default-exclude - Only take snapshots if dataset has com.sun:auto-snapshot=true property set
+sys-fs/zfs-auto-snapshot:cron - Install /etc/cron.* files
+sys-fs/zfs-auto-snapshot:default-exclude - Only take snapshots of datasets with com.sun:auto-snapshot=true property set
 sys-fs/zfs-kmod:rootfs - Install zfs-shutdown script to support exporting a pool containing rootfs
-sys-kernel/dracut:debug - Module installing additional tools like strace, file editor, ssh and more
 sys-kernel/genkernel:cryptsetup - Enable support for Luks disk encryption using sys-fs/cryptsetup
 sys-kernel/genkernel:firmware - Prefer system firmware sys-kernel/linux-firmware over local copy.
 sys-libs/binutils-libs:64-bit-bfd - Support 64-bit targets even on 32-bit hosts (is ignored on 64-bit hosts)
+sys-libs/binutils-libs:cet - Enable Intel Control-flow Enforcement Technology.
 sys-libs/binutils-libs:multitarget - Enable all possible targets in libbfd
-sys-libs/db:rpc - Enable rpc client/server
 sys-libs/freeipmi:nagios - Install a nagios plugin to check sensors' status.
 sys-libs/gdbm:berkdb - enable compatibility layer for UNIX-like dbm and ndbm interfaces
-sys-libs/gdbm:exporter - enable gdbmexport binary for exporting data from gdbm-1.8 databases into gdbm-1.9
 sys-libs/glibc:cet - Enable Intel Control-flow Enforcement Technology (needs binutils 2.29 and gcc 8)
 sys-libs/glibc:compile-locales - build *all* locales in src_install; this is generally meant for stage building only as it ignores /etc/locale.gen file and can be pretty slow
+sys-libs/glibc:crypt - build and install libcrypt and crypt.h
 sys-libs/glibc:debug - When USE=hardened, allow fortify/stack violations to dump core (SIGABRT) and not kill self (SIGKILL)
 sys-libs/glibc:gd - build memusage and memusagestat tools
 sys-libs/glibc:multiarch - enable optimizations for multiple CPU architectures (detected at runtime)
+sys-libs/glibc:multilib-bootstrap - Provide prebuilt libgcc.a and crt files if missing. Only needed for ABI switch.
 sys-libs/glibc:nscd - Build, and enable support for, the Name Service Cache Daemon
 sys-libs/glibc:rpc - Enable obsolete RPC/NIS layers
+sys-libs/glibc:ssp - protect stack of glibc internals
+sys-libs/glibc:static-pie - Enable static PIE support (runtime files for -static-pie gcc option).
 sys-libs/glibc:suid - Make internal pt_chown helper setuid -- not needed if using Linux and have /dev/pts mounted with gid=5
 sys-libs/glibc:systemtap - enable systemtap static probe points
-sys-libs/gwenhywfar:designer - Build plugins for dev-qt/designer
-sys-libs/gwenhywfar:fox - Use x11-libs/fox graphical toolkit
-sys-libs/gwenhywfar:qml - Enable support for plugins using QML
-sys-libs/gwenhywfar:sensors - Enable support for dev-qt/qtsensors module
-sys-libs/gwenhywfar:serialport - Enable support for dev-qt/qtserialport module
-sys-libs/gwenhywfar:webkit - Enable support for dev-qt/qtwebkit
 sys-libs/libblockdev:bcache - Enable block device cache support.
 sys-libs/libblockdev:cryptsetup - Enable sys-fs/cryptsetup support
+sys-libs/libblockdev:device-mapper - Enable support for device-mapper from sys-fs/lvm2
 sys-libs/libblockdev:dmraid - Support for dmraid devices, also known as ATA-RAID, or Fake RAID.
 sys-libs/libblockdev:escrow - Support for building crypto plugin with escrow device support
 sys-libs/libblockdev:kbd - Enable kernel block device support.
 sys-libs/libblockdev:lvm - Enable support for Logical Volume Management via sys-fs/lvm2.
+sys-libs/libblockdev:tools - Build tools
 sys-libs/libblockdev:vdo - Enable Virtual Data Optimizer support.
-sys-libs/libhugetlbfs:perl - Install the cpupcstat tool and some perl modules
 sys-libs/libunwind:debug-frame - Adds support for DWARF .debug_frame section: Use the information from this section if available
 sys-libs/libunwind:libatomic - Use libatomic instead of builtin atomic operations
+sys-libs/libxcrypt:compat - Build with compatibility interfaces for other crypt implementations
+sys-libs/libxcrypt:system - Install as system libcrypt.so rather than to an alternate directory (will collide with sys-libs/glibc's version)
 sys-libs/musl-nscd:minimal - Only installs the header files
 sys-libs/ncurses:ada - Add bindings for the ADA programming language
 sys-libs/ncurses:tinfo - Build curses library (libncurses) sep from the low-level terminfo library (libtinfo) -- usually needed only for binary packages -- but it is binary compatible in either mode
 sys-libs/ncurses:trace - Enable test trace() support in ncurses calls
+sys-libs/ncurses-compat:tinfo - Build curses library (libncurses) sep from the low-level terminfo library (libtinfo) -- usually needed only for binary packages -- but it is binary compatible in either mode
 sys-libs/newlib:nano - Build additional newlib-nano library
 sys-libs/pam:berkdb - Build the pam_userdb module, that allows to authenticate users against a Berkeley DB file. Please note that enabling this USE flag will create a PAM module that links to the Berkeley DB (as provided by sys-libs/db) installed in /usr/lib and will thus not work for boot-critical services authentication.
-sys-libs/pam:cracklib - Build the pam_cracklib module, that allows to verify the chosen passwords' strength through the use of sys-libs/cracklib. Please note that simply enabling the USE flag on this package will not make use of pam_cracklib by default, you should also enable it in sys-auth/pambase as well as update your configuration files.
 sys-libs/readline:utils - Install rlfe (ReadLine Front-End) helper tool -- a wrapper program for making any stdin use readline
-sys-libs/uclibc-ng:rpc - Enable sun nis/rpc support (you should use libtirpc though)
 sys-libs/uclibc-ng:symlink-compat - Explicitly add sym links for libdl.so.0, libm.so.0, and friends for backward compatibility with sys-libs/uclibc-ng-1.0.17 and earlier
 sys-libs/zlib:minizip - include the minizip library for quick and dirty zip extraction
-sys-power/pm-utils:ntp - Install support for net-misc/ntp
+sys-libs/zlib-ng:compat - Enable compatibility to sys-libs/zlib
 sys-process/criu:setproctitle - Make process titles of service workers to be more verbose
 sys-process/cronie:anacron - Install the periodic anacron command scheduler.
-sys-process/cronie:inotify - Enable inotify filesystem monitoring support.
 sys-process/fcron:debug - Enable debug code and output. Since version 3.0.5 this will no longer force foreground execution, and fcron will be able to run as a service properly.
 sys-process/fcron:mta - Enable mta support for sending emails from fcron
 sys-process/fcron:pam - Enable PAM support for fcron. This means that fcron will pass through the "fcron" stack before executing the jobs, and fcrontab will use the "fcrontab" stack to authenticate the user before editing its crontab file.
 sys-process/fcron:system-crontab - Set up fcron to respect /etc/crontab and /etc/cron.d. If this flag is disabled, /etc/cron.d and /etc/crontab will be ignored, but /etc/cron.{hourly,daily,weekly,monthly} will still be respected.
+sys-process/htop:hwloc - Use sys-apps/hwloc for CPU affinity support
 sys-process/htop:openvz - Enable openvz support
 sys-process/htop:vserver - Enable vserver support
 sys-process/lsof:rpc - support looking up RPC service info

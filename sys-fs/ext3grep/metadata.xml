@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>hanno@gentoo.org</email>
-	</maintainer>
-	<upstream>
-		<remote-id type="google-code">ext3grep</remote-id>
-	</upstream>
+ <maintainer type="person">
+  <email>hanno@gentoo.org</email>
+ </maintainer>
+ 
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

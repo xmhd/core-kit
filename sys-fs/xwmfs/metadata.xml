@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-  <maintainer type="person">
-    <email>matthias.gerstner@nefkom.net</email>
-    <name>Matthias Gerstner</name>
-  </maintainer>
-  <maintainer type="project">
-    <email>proxy-maint@gentoo.org</email>
-    <name>Proxy Maintainers</name>
-  </maintainer>
-  <longdescription lang="en">
+ <maintainer type="person">
+  <email>matthias.gerstner@nefkom.net</email>
+  <name>Matthias Gerstner</name>
+ </maintainer>
+ <maintainer type="project">
+  <email>proxy-maint@gentoo.org</email>
+  <name>Proxy Maintainers</name>
+ </maintainer>
+ <longdescription lang="en">
     This is xwmfs (X window manager file system), a userspace file system based on
     fuse that allows interaction with an EWMH compliant X11 window manager
     via files.
@@ -28,7 +28,8 @@
     the window manager and windows (for example identifying specific windows,
     rename a window, move it around and so on).
   </longdescription>
-  <upstream>
-    <remote-id type="github">gestner-hub/xwmfs</remote-id>
-  </upstream>
+ <upstream>
+  <remote-id type="github">gestner-hub/xwmfs</remote-id>
+ </upstream>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

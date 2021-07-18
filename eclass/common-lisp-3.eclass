@@ -1,15 +1,26 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: common-lisp-3.eclass
 # @MAINTAINER:
 # Common Lisp project <common-lisp@gentoo.org>
+# @SUPPORTED_EAPIS: 6 7
 # @BLURB: functions to support the installation of Common Lisp libraries
 # @DESCRIPTION:
 # Since Common Lisp libraries share similar structure, this eclass aims
 # to provide a simple way to write ebuilds with these characteristics.
 
+case ${EAPI} in
+	[67]) ;;
+	*) die "EAPI=${EAPI:-0} is not supported" ;;
+esac
+
+EXPORT_FUNCTIONS src_compile src_install
+
 inherit eutils
+
+if [[ -z ${_COMMON_LISP_3_ECLASS} ]]; then
+_COMMON_LISP_3_ECLASS=1
 
 # @ECLASS-VARIABLE: CLIMPLEMENTATIONS
 # @DESCRIPTION:
@@ -35,8 +46,6 @@ CLSYSTEMROOT="${ROOT%/}"/usr/share/common-lisp/systems
 CLPACKAGE="${PN}"
 
 PDEPEND="virtual/commonlisp"
-
-EXPORT_FUNCTIONS src_compile src_install
 
 # @FUNCTION: common-lisp-3_src_compile
 # @DESCRIPTION:
@@ -75,6 +84,7 @@ common-lisp-install-one-source() {
 }
 
 # @FUNCTION: lisp-file-p
+# @USAGE: <file>
 # @DESCRIPTION:
 # Returns true if ${1} is lisp source file.
 lisp-file-p() {
@@ -84,6 +94,7 @@ lisp-file-p() {
 }
 
 # @FUNCTION: common-lisp-get-fpredicate
+# @USAGE: <type>
 # @DESCRIPTION:
 # Outputs the corresponding predicate to check files of type ${1}.
 common-lisp-get-fpredicate() {
@@ -98,7 +109,7 @@ common-lisp-get-fpredicate() {
 }
 
 # @FUNCTION: common-lisp-install-sources
-# @USAGE: common-lisp-install-sources path [<other_paths>...]
+# @USAGE: <path> [...]
 # @DESCRIPTION:
 # Recursively install lisp sources of type ${2} if ${1} is -t or
 # Lisp by default. When given a directory, it will be recursively
@@ -126,6 +137,7 @@ common-lisp-install-sources() {
 }
 
 # @FUNCTION: common-lisp-install-one-asdf
+# @USAGE: <file>
 # @DESCRIPTION:
 # Installs ${1} asdf file in CLSOURCEROOT/CLPACKAGE and symlinks it in
 # CLSYSTEMROOT.
@@ -133,14 +145,14 @@ common-lisp-install-one-asdf() {
 	[[ $# != 1 ]] && die "${FUNCNAME[0]} must receive exactly one argument"
 
 	# the suffix «.asd» is optional
-	local source=${1/.asd}.asd
+	local source=${1%.asd}.asd
 	common-lisp-install-one-source true "${source}" "$(dirname "${source}")"
 	local target="${CLSOURCEROOT%/}/${CLPACKAGE}/${source}"
 	dosym "${target}" "${CLSYSTEMROOT%/}/$(basename ${target})"
 }
 
 # @FUNCTION: common-lisp-install-asdf
-# @USAGE: common-lisp-install-asdf path [<other_paths>...]
+# @USAGE: <path> [...]
 # @DESCRIPTION:
 # Installs all ASDF files and creates symlinks in CLSYSTEMROOT.
 # When given a directory, it will be recursively scanned for ASDF
@@ -167,7 +179,6 @@ common-lisp-3_src_install() {
 }
 
 # @FUNCTION: common-lisp-find-lisp-impl
-# @USAGE: common-lisp-find-lisp-impl
 # @DESCRIPTION:
 # Outputs an installed Common Lisp implementation. Transverses
 # CLIMPLEMENTATIONS to find it.
@@ -179,7 +190,7 @@ common-lisp-find-lisp-impl() {
 }
 
 # @FUNCTION: common-lisp-export-impl-args
-# @USAGE: common-lisp-export-impl-args <lisp-implementation>
+# @USAGE: <lisp-implementation>
 # @DESCRIPTION:
 # Export a few variables containing the switches necessary
 # to make the CL implementation perform basic functions:
@@ -195,6 +206,7 @@ common-lisp-export-impl-args() {
 	CL_BINARY="${1}"
 	case "${CL_BINARY}" in
 		sbcl)
+			CL_BINARY="${CL_BINARY} --non-interactive"
 			CL_NORC="--sysinit /dev/null --userinit /dev/null"
 			CL_LOAD="--load"
 			CL_EVAL="--eval"
@@ -232,3 +244,5 @@ common-lisp-export-impl-args() {
 	esac
 	export CL_BINARY CL_NORC CL_LOAD CL_EVAL
 }
+
+fi

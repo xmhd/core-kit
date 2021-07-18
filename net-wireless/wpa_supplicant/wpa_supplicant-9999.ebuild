@@ -1,9 +1,9 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
-inherit eutils qmake-utils systemd toolchain-funcs readme.gentoo-r1
+inherit desktop qmake-utils readme.gentoo-r1 systemd toolchain-funcs
 
 DESCRIPTION="IEEE 802.1X/WPA supplicant for secure wireless transfers"
 HOMEPAGE="https://w1.fi/wpa_supplicant/"
@@ -12,17 +12,26 @@ LICENSE="|| ( GPL-2 BSD )"
 if [ "${PV}" = "9999" ]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://w1.fi/hostap.git"
-	KEYWORDS=""
 else
-	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86"
 	SRC_URI="https://w1.fi/releases/${P}.tar.gz"
 fi
 
 SLOT="0"
-IUSE="ap bindist dbus eap-sim eapol_test fasteap gnutls +hs2-0 libressl p2p privsep ps3 qt5 readline selinux smartcard ssl suiteb tdls uncommon-eap-types wimax wps kernel_linux kernel_FreeBSD"
-REQUIRED_USE="smartcard? ( ssl )"
+IUSE="ap bindist broadcom-sta dbus eap-sim eapol-test fasteap +fils +hs2-0 macsec +mbo +mesh p2p privsep ps3 qt5 readline selinux smartcard tdls uncommon-eap-types wimax wps kernel_linux kernel_FreeBSD"
 
-CDEPEND="dbus? ( sys-apps/dbus )
+# CONFIG_PRIVSEP=y does not have sufficient support for the new driver
+# interface functions used for MACsec, so this combination cannot be used
+# at least for now.
+REQUIRED_USE="
+	macsec? ( !privsep )
+	privsep? ( !macsec )
+	broadcom-sta? ( !fils !mesh !mbo )
+"
+
+DEPEND="
+	>=dev-libs/openssl-1.0.2k:0=[bindist(-)=]
+	dbus? ( sys-apps/dbus )
 	kernel_linux? (
 		dev-libs/libnl:3
 		net-wireless/crda
@@ -39,31 +48,18 @@ CDEPEND="dbus? ( sys-apps/dbus )
 		sys-libs/ncurses:0=
 		sys-libs/readline:0=
 	)
-	ssl? (
-		gnutls? (
-			dev-libs/libgcrypt:0=
-			net-libs/gnutls:=
-		)
-		!gnutls? (
-			!libressl? ( >=dev-libs/openssl-1.0.2k:0=[bindist=] )
-			libressl? ( dev-libs/libressl:0= )
-		)
-	)
-	!ssl? ( dev-libs/libtommath )
 "
-DEPEND="${CDEPEND}
-	virtual/pkgconfig
-"
-RDEPEND="${CDEPEND}
+RDEPEND="${DEPEND}
 	selinux? ( sec-policy/selinux-networkmanager )
 "
+BDEPEND="virtual/pkgconfig"
 
 DOC_CONTENTS="
 	If this is a clean installation of wpa_supplicant, you
 	have to create a configuration file named
-	${EROOT%/}/etc/wpa_supplicant/wpa_supplicant.conf
+	${EROOT}/etc/wpa_supplicant/wpa_supplicant.conf
 	An example configuration file is available for reference in
-	${EROOT%/}/usr/share/doc/${PF}/
+	${EROOT}/usr/share/doc/${PF}/
 "
 
 S="${WORKDIR}/${P}/${PN}"
@@ -86,16 +82,6 @@ Kconfig_style_config() {
 			#ensure item commented out
 			sed -i "/^$CONFIG_PARAM/s/$CONFIG_PARAM/# $CONFIG_PARAM/" .config || echo "Kconfig_style_config error commenting $CONFIG_PARAM"
 		fi
-}
-
-pkg_setup() {
-	if use ssl ; then
-		if use gnutls && use libressl ; then
-			elog "You have both 'gnutls' and 'libressl' USE flags enabled: defaulting to USE=\"gnutls\""
-		fi
-	else
-		elog "You have 'ssl' USE flag disabled: defaulting to internal TLS implementation"
-	fi
 }
 
 src_prepare() {
@@ -143,7 +129,7 @@ src_prepare() {
 
 src_configure() {
 	# Toolchain setup
-	tc-export CC
+	tc-export CC PKG_CONFIG
 
 	cp defconfig .config || die
 
@@ -154,6 +140,12 @@ src_configure() {
 	Kconfig_style_config IBSS_RSN
 	Kconfig_style_config IEEE80211W
 	Kconfig_style_config IEEE80211R
+	Kconfig_style_config HT_OVERRIDES
+	Kconfig_style_config VHT_OVERRIDES
+	Kconfig_style_config OCV
+	Kconfig_style_config TLSV11
+	Kconfig_style_config TLSV12
+	Kconfig_style_config GETRANDOM
 
 	# Basic authentication methods
 	# NOTE: we don't set GPSK or SAKE as they conflict
@@ -171,6 +163,7 @@ src_configure() {
 	Kconfig_style_config EAP_LEAP
 	Kconfig_style_config EAP_MSCHAPV2
 	Kconfig_style_config EAP_PEAP
+	Kconfig_style_config EAP_TEAP
 	Kconfig_style_config EAP_TLS
 	Kconfig_style_config EAP_TTLS
 
@@ -182,9 +175,13 @@ src_configure() {
 		Kconfig_style_config CTRL_IFACE_DBUS
 		Kconfig_style_config CTRL_IFACE_DBUS_NEW
 		Kconfig_style_config CTRL_IFACE_DBUS_INTRO
+	else
+		Kconfig_style_config CTRL_IFACE_DBUS n
+		Kconfig_style_config CTRL_IFACE_DBUS_NEW n
+		Kconfig_style_config CTRL_IFACE_DBUS_INTRO n
 	fi
 
-	if use eapol_test ; then
+	if use eapol-test ; then
 		Kconfig_style_config EAPOL_TEST
 	fi
 
@@ -195,6 +192,12 @@ src_configure() {
 	if use hs2-0 ; then
 		Kconfig_style_config INTERWORKING
 		Kconfig_style_config HS20
+	fi
+
+	if use mbo ; then
+		Kconfig_style_config MBO
+	else
+		Kconfig_style_config MBO n
 	fi
 
 	if use uncommon-eap-types; then
@@ -225,38 +228,31 @@ src_configure() {
 		Kconfig_style_config WPA_CLI_EDIT
 	fi
 
-	if use suiteb; then
-		Kconfig_style_config SUITEB
-	fi
-
-	# SSL authentication methods
-	if use ssl ; then
-		if use gnutls ; then
-			Kconfig_style_config TLS gnutls
-			Kconfig_style_config GNUTLS_EXTRA
-		else
-			#this fails for gnutls
-			Kconfig_style_config SUITEB192
-			Kconfig_style_config TLS openssl
-			if ! use bindist; then
-			  #this fails for gnutls
-			  Kconfig_style_config EAP_PWD
-			  # SAE fails on gnutls and everything below here needs SAE
-			  # Enabling mesh networks.
-			  Kconfig_style_config MESH
-			  #WPA3
-			  Kconfig_style_config OWE
-			  Kconfig_style_config SAE
-			  #we also need to disable FILS, except that isn't enabled yet
-			fi
-
+	Kconfig_style_config TLS openssl
+	Kconfig_style_config FST
+	if ! use bindist ; then
+		Kconfig_style_config EAP_PWD
+		if use fils; then
+			Kconfig_style_config FILS
+			Kconfig_style_config FILS_SK_PFS
 		fi
-	else
-		Kconfig_style_config TLS internal
+		if use mesh; then
+			Kconfig_style_config MESH
+		else
+			Kconfig_style_config MESH n
+		fi
+		#WPA3
+		Kconfig_style_config OWE
+		Kconfig_style_config SAE
+		Kconfig_style_config DPP
+		Kconfig_style_config SUITEB192
+		Kconfig_style_config SUITEB
 	fi
 
 	if use smartcard ; then
 		Kconfig_style_config SMARTCARD
+	else
+		Kconfig_style_config SMARTCARD n
 	fi
 
 	if use tdls ; then
@@ -272,6 +268,13 @@ src_configure() {
 		Kconfig_style_config DRIVER_RALINK
 		Kconfig_style_config DRIVER_WEXT
 		Kconfig_style_config DRIVER_WIRED
+
+		if use macsec ; then
+			#requires something, no idea what
+			#Kconfig_style_config DRIVER_MACSEC_QCA
+			Kconfig_style_config DRIVER_MACSEC_LINUX
+			Kconfig_style_config MACSEC
+		fi
 
 		if use ps3 ; then
 			Kconfig_style_config DRIVER_PS3
@@ -294,17 +297,29 @@ src_configure() {
 		Kconfig_style_config WPS_UPNP
 		# Near Field Communication
 		Kconfig_style_config WPS_NFC
+	else
+		Kconfig_style_config WPS n
+		Kconfig_style_config WPS2 n
+		Kconfig_style_config WPS_UFD n
+		Kconfig_style_config WPS_ER n
+		Kconfig_style_config WPS_UPNP n
+		Kconfig_style_config WPS_NFC n
 	fi
 
 	# Wi-Fi Direct (WiDi)
 	if use p2p ; then
 		Kconfig_style_config P2P
 		Kconfig_style_config WIFI_DISPLAY
+	else
+		Kconfig_style_config P2P n
+		Kconfig_style_config WIFI_DISPLAY n
 	fi
 
 	# Access Point Mode
 	if use ap ; then
 		Kconfig_style_config AP
+	else
+		Kconfig_style_config AP n
 	fi
 
 	# Enable essentials for AP/P2P
@@ -352,7 +367,7 @@ src_compile() {
 		emake -C "${S}"/wpa_gui-qt4
 	fi
 
-	if use eapol_test ; then
+	if use eapol-test ; then
 		emake eapol_test
 	fi
 }
@@ -392,7 +407,7 @@ src_install() {
 		into /usr
 		dobin wpa_gui-qt4/wpa_gui
 		doicon wpa_gui-qt4/icons/wpa_gui.svg
-		make_desktop_entry wpa_gui "WPA Supplicant Administration GUI" "wpa_gui" "Qt;Network;"
+		domenu wpa_gui-qt4/wpa_gui.desktop
 	else
 		rm "${ED}"/usr/share/man/man8/wpa_gui.8
 	fi
@@ -404,14 +419,14 @@ src_install() {
 		insinto /etc/dbus-1/system.d
 		newins dbus-wpa_supplicant.conf wpa_supplicant.conf
 		insinto /usr/share/dbus-1/system-services
-		doins fi.epitest.hostap.WPASupplicant.service fi.w1.wpa_supplicant1.service
+		doins fi.w1.wpa_supplicant1.service
 		popd > /dev/null || die
 
 		# This unit relies on dbus support, bug 538600.
 		systemd_dounit systemd/wpa_supplicant.service
 	fi
 
-	if use eapol_test ; then
+	if use eapol-test ; then
 		dobin eapol_test
 	fi
 
@@ -423,27 +438,25 @@ src_install() {
 pkg_postinst() {
 	readme.gentoo_print_elog
 
-	if [[ -e "${EROOT%/}"/etc/wpa_supplicant.conf ]] ; then
+	if [[ -e "${EROOT}"/etc/wpa_supplicant.conf ]] ; then
 		echo
-		ewarn "WARNING: your old configuration file ${EROOT%/}/etc/wpa_supplicant.conf"
-		ewarn "needs to be moved to ${EROOT%/}/etc/wpa_supplicant/wpa_supplicant.conf"
+		ewarn "WARNING: your old configuration file ${EROOT}/etc/wpa_supplicant.conf"
+		ewarn "needs to be moved to ${EROOT}/etc/wpa_supplicant/wpa_supplicant.conf"
 	fi
 
-	if use bindist || use gnutls; then
-		if ! use libressl; then
-			ewarn "Using bindist or gnutls use flags presently breaks WPA3 (specifically SAE and OWE)."
-			ewarn "This is incredibly undesirable"
-		fi
+	if use bindist; then
+		ewarn "Using bindist use flag presently breaks WPA3 (specifically SAE, OWE, DPP, and FILS)."
+		ewarn "This is incredibly undesirable"
 	fi
 
 	# Mea culpa, feel free to remove that after some time --mgorny.
 	local fn
 	for fn in wpa_supplicant{,@wlan0}.service; do
-		if [[ -e "${EROOT%/}"/etc/systemd/system/network.target.wants/${fn} ]]
+		if [[ -e "${EROOT}"/etc/systemd/system/network.target.wants/${fn} ]]
 		then
 			ebegin "Moving ${fn} to multi-user.target"
-			mv "${EROOT%/}"/etc/systemd/system/network.target.wants/${fn} \
-				"${EROOT%/}"/etc/systemd/system/multi-user.target.wants/ || die
+			mv "${EROOT}"/etc/systemd/system/network.target.wants/${fn} \
+				"${EROOT}"/etc/systemd/system/multi-user.target.wants/ || die
 			eend ${?} \
 				"Please try to re-enable ${fn}"
 		fi

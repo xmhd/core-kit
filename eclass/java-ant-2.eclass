@@ -1,11 +1,13 @@
-# Copyright 2004-2018 Gentoo Foundation
+# Copyright 2004-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: java-ant-2.eclass
 # @MAINTAINER:
 # java@gentoo.org
 # @AUTHOR:
-# kiorky (kiorky@cryptelium.net), Petteri Räty (betelgeuse@gentoo.org)
+# kiorky <kiorky@cryptelium.net>
+# Petteri Räty <betelgeuse@gentoo.org>
+# @SUPPORTED_EAPIS: 5 6 7
 # @BLURB: eclass for ant based Java packages
 # @DESCRIPTION:
 # Eclass for Ant-based Java packages. Provides support for both automatic and
@@ -13,6 +15,16 @@
 # or java-pkg-opt-2 eclass.
 
 inherit java-utils-2 multilib
+
+case ${EAPI:-0} in
+	[567]) ;;
+	*) die "${ECLASS}: EAPI ${EAPI:-0} not supported" ;;
+esac
+
+EXPORT_FUNCTIONS src_configure
+
+if [[ -z ${_JAVA_ANT_2_ECLASS} ]] ; then
+_JAVA_ANT_2_ECLASS=1
 
 # This eclass provides functionality for Java packages which use
 # ant to build. In particular, it will attempt to fix build.xml files, so that
@@ -107,11 +119,6 @@ JAVA_ANT_CLASSPATH_TAGS="javac xjavac"
 # @DEFAULT_UNSET
 # @DESCRIPTION:
 # When set, <available> Ant tasks are rewritten to ignore Ant's runtime classpath.
-
-case "${EAPI:-0}" in
-	0|1) : ;;
-	*) EXPORT_FUNCTIONS src_configure ;;
-esac
 
 # @FUNCTION: java-ant-2_src_configure
 # @DESCRIPTION:
@@ -224,8 +231,13 @@ java-ant_bsfix_files() {
 			files+=( -f "${file}" )
 		done
 
-		local rewriter3="${EPREFIX}/usr/$(get_libdir)/javatoolkit/bin/xml-rewrite-3.py"
-		local rewriter4="${EPREFIX}/usr/$(get_libdir)/javatoolkit/bin/build-xml-rewrite"
+		if [ -e "${EPREFIX}/usr/libexec/javatoolkit" ]; then
+			local rewriter3="${EPREFIX}/usr/libexec/javatoolkit/xml-rewrite-3.py"
+			local rewriter4="${EPREFIX}/usr/libexec/javatoolkit/build-xml-rewrite"
+		else
+			local rewriter3="${EPREFIX}/usr/$(get_libdir)/javatoolkit/bin/xml-rewrite-3.py"
+			local rewriter4="${EPREFIX}/usr/$(get_libdir)/javatoolkit/bin/build-xml-rewrite"
+		fi
 
 		if [[ -x ${rewriter4} && ${JAVA_ANT_ENCODING} ]]; then
 			[[ ${JAVA_ANT_REWRITE_CLASSPATH} ]] && local gcp="-g"
@@ -375,11 +387,11 @@ java-ant_ignore-system-classes() {
 # @DESCRIPTION:
 # Run the right xml-rewrite binary with the given arguments
 java-ant_xml-rewrite() {
-	local gen2="${EPREFIX}/usr/bin/xml-rewrite-2.py"
 	local gen2_1="${EPREFIX}/usr/$(get_libdir)/javatoolkit/bin/xml-rewrite-2.py"
+	local gen2_2="${EPREFIX}/usr/libexec/javatoolkit/xml-rewrite-2.py"
 	# gen1 is deprecated
-	if [[ -x "${gen2}" ]]; then
-		${gen2} "${@}" || die "${gen2} failed"
+	if [[ -x "${gen2_2}" ]]; then
+		${gen2_2} "${@}" || die "${gen2_2} failed"
 	elif [[ -x "${gen2_1}" ]]; then
 		${gen2_1} "${@}" || die "${gen2_1} failed"
 	else
@@ -424,3 +436,5 @@ java-ant_rewrite-bootclasspath() {
 	java-ant_xml-rewrite -f "${file}" -c -e ${JAVA_PKG_BSFIX_TARGET_TAGS// / -e } \
 		-a bootclasspath -v "${bcp}"
 }
+
+fi

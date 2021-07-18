@@ -1,11 +1,13 @@
+BDEPEND=virtual/pkgconfig >=dev-vcs/git-1.8.2.1[curl]
 DEFINED_PHASES=install postinst unpack
-DEPEND=>=dev-vcs/git-1.8.2.1[curl]
 DESCRIPTION=ZFS Automatic Snapshot Service for Linux
-EAPI=6
+EAPI=7
 HOMEPAGE=https://github.com/zfsonlinux/zfs-auto-snapshot
-IUSE=+default-exclude
+IUSE=+cron +default-exclude systemd
 LICENSE=GPL-2+
-RDEPEND=sys-fs/zfs virtual/cron
+PROPERTIES=live
+RDEPEND=sys-fs/zfs !systemd? ( virtual/cron )
+REQUIRED_USE=!systemd? ( cron )
 SLOT=0
-_eclasses_=git-r3	0d4635eeb5a96cd5315597a47eba25c9	readme.gentoo-r1	22ae82e140bdd95d17a34fd5fd733190
-_md5_=38ee8a0fd1a8ae8428fe25fe197e58d6
+_eclasses_=git-r3	cc875b0c1e9b3bdac1af0f82f3ba29da	multilib	97566c1a256d07b00848aa767e38a352	prefix	d04f14b297013ad1410550c0757f14f8	readme.gentoo-r1	e51390d48521eb3d400db57d557b7530	systemd	c846b9e02ac8293bfc9ca38a195c2a18	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa
+_md5_=120a1d6ae18a33aeb11385d3539996a1

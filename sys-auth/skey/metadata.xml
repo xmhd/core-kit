@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-<maintainer type="person">
+ <maintainer type="person">
   <email>ulm@gentoo.org</email>
-</maintainer>
-<longdescription lang="en">
+ </maintainer>
+ <longdescription lang="en">
   From RFC2289:
   One form of attack on networked computing systems is eavesdropping on
   network connections to obtain authentication information such as the
@@ -26,4 +26,6 @@
   gaining access to private information and does not provide protection
   against either "social engineering" or active attacks.
 </longdescription>
+ 
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

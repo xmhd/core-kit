@@ -1,19 +1,15 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>wraeth@gentoo.org</email>
-		<name>Sam Jorna</name>
-	</maintainer>
-	<maintainer type="person">
-		<email>sveyret@gmail.com</email>
-		<name>Stéphane Veyret</name>
-	</maintainer>
-	<maintainer type="project">
-		<email>proxy-maint@gentoo.org</email>
-		<name>Proxy Maintainers</name>
-	</maintainer>
-	<longdescription lang="en">
+ <maintainer type="person">
+  <email>sveyret@gmail.com</email>
+  <name>Stéphane Veyret</name>
+ </maintainer>
+ <maintainer type="project">
+  <email>proxy-maint@gentoo.org</email>
+  <name>Proxy Maintainers</name>
+ </maintainer>
+ <longdescription lang="en">
 A graphical boot manager for EFI- and UEFI-based computers, such as all
 Intel-based Macs and recent (most 2011 and later) PCs. rEFInd presents a
 boot menu showing all the EFI boot loaders on the EFI-accessible
@@ -27,7 +23,7 @@ loaders from these filesystems, too. rEFInd's ability to detect boot
 loaders at runtime makes it very easy to use, particularly when paired with
 Linux kernels that provide EFI stub support.
 	</longdescription>
-	<longdescription lang="fr">
+ <longdescription lang="fr">
 Un gestionnaire d'amorçage pour ordinateur EFI ou UEFI tel que tous les Macs
 contenant un processeur Intel et les PC récents (2011 et après). rEFInd affiche
 un menu d'amorçage montrant tous les gestionnaires d'amorçage sur les
@@ -43,27 +39,28 @@ systèmes de fichiers. La capacité de rEFInd à détecter les gestionnaires
 d'amorçage au moment de l'exécution le rend très facile à utiliser, en
 particulier associé à des noyau Linux qui fournissent un support EFI stub.
 	</longdescription>
-	<use lang="en">
-		<flag name="ext2">Builds the EFI binary ext2 filesystem driver</flag>
-		<flag name="ext4">Builds the EFI binary ext4 filesystem driver</flag>
-		<flag name="reiserfs">Builds the EFI binary reiserfs filesystem driver</flag>
-		<flag name="iso9660">Builds the EFI binary iso9660 filesystem driver</flag>
-		<flag name="hfs">Builds the EFI binary hfs filesystem driver</flag>
-		<flag name="btrfs">Builds the EFI binary btrfs filesystem driver</flag>
-		<flag name="ntfs">Builds the EFI binary ntfs filesystem driver</flag>
-		<flag name="gnuefi">Compile using GNU-EFI instead of Tianocore</flag>
-	</use>
-	<use lang="fr">
-		<flag name="ext2">Construire le gestionnaire EFI pour le système de fichier ext2</flag>
-		<flag name="ext4">Construire le gestionnaire EFI pour le système de fichier ext4</flag>
-		<flag name="reiserfs">Construire le gestionnaire EFI pour le système de fichier reiserfs</flag>
-		<flag name="iso9660">Construire le gestionnaire EFI pour le système de fichier iso9660</flag>
-		<flag name="hfs">Construire le gestionnaire EFI pour le système de fichier hfs</flag>
-		<flag name="btrfs">Construire le gestionnaire EFI pour le système de fichier btrfs</flag>
-		<flag name="ntfs">Construire le gestionnaire EFI pour le système de fichier ntfs</flag>
-		<flag name="gnuefi">Compiler en utilisant GNU-EFI au lieu de Tianocore</flag>
-	</use>
-	<upstream>
-		<remote-id type="sourceforge">refind</remote-id>
-	</upstream>
+ <upstream>
+  <remote-id type="sourceforge">refind</remote-id>
+ </upstream>
+ <use lang="en">
+  <flag name="ext2">Builds the EFI binary ext2 filesystem driver</flag>
+  <flag name="ext4">Builds the EFI binary ext4 filesystem driver</flag>
+  <flag name="reiserfs">Builds the EFI binary reiserfs filesystem driver</flag>
+  <flag name="iso9660">Builds the EFI binary iso9660 filesystem driver</flag>
+  <flag name="hfs">Builds the EFI binary hfs filesystem driver</flag>
+  <flag name="btrfs">Builds the EFI binary btrfs filesystem driver</flag>
+  <flag name="ntfs">Builds the EFI binary ntfs filesystem driver</flag>
+  <flag name="gnuefi">Compile using GNU-EFI instead of Tianocore</flag>
+ </use>
+ <use lang="fr">
+  <flag name="ext2">Construire le gestionnaire EFI pour le système de fichier ext2</flag>
+  <flag name="ext4">Construire le gestionnaire EFI pour le système de fichier ext4</flag>
+  <flag name="reiserfs">Construire le gestionnaire EFI pour le système de fichier reiserfs</flag>
+  <flag name="iso9660">Construire le gestionnaire EFI pour le système de fichier iso9660</flag>
+  <flag name="hfs">Construire le gestionnaire EFI pour le système de fichier hfs</flag>
+  <flag name="btrfs">Construire le gestionnaire EFI pour le système de fichier btrfs</flag>
+  <flag name="ntfs">Construire le gestionnaire EFI pour le système de fichier ntfs</flag>
+  <flag name="gnuefi">Compiler en utilisant GNU-EFI au lieu de Tianocore</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

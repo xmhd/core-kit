@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 2001-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -6,33 +6,33 @@ EAPI="6"
 inherit autotools libtool multilib-minimal
 
 DESCRIPTION="HTTP and WebDAV client library"
-HOMEPAGE="http://webdav.org/neon/"
+HOMEPAGE="https://notroj.github.io/neon/"
 SRC_URI="http://webdav.org/neon/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0/27"
-KEYWORDS="alpha amd64 arm arm64 hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~ppc-aix ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~m68k-mint ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="doc expat gnutls kerberos libproxy libressl nls pkcs11 ssl static-libs zlib"
+KEYWORDS="~alpha amd64 arm arm64 ~hppa ~ia64 ~mips ppc ppc64 ~s390 sparc x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+IUSE="doc expat gnutls kerberos libproxy nls pkcs11 ssl static-libs zlib"
 RESTRICT="test"
 
 RDEPEND="expat? ( dev-libs/expat:0=[${MULTILIB_USEDEP}] )
 	!expat? ( dev-libs/libxml2:2=[${MULTILIB_USEDEP}] )
-	gnutls? (
-		app-misc/ca-certificates
-		net-libs/gnutls:0=[${MULTILIB_USEDEP}]
-		pkcs11? ( dev-libs/pakchois:0=[${MULTILIB_USEDEP}] )
-	)
-	!gnutls? ( ssl? (
-		libressl? ( dev-libs/libressl:=[${MULTILIB_USEDEP}] )
-		!libressl? ( dev-libs/openssl:0=[${MULTILIB_USEDEP}] )
-		pkcs11? ( dev-libs/pakchois:0=[${MULTILIB_USEDEP}] )
-	) )
 	kerberos? ( virtual/krb5:0=[${MULTILIB_USEDEP}] )
 	libproxy? ( net-libs/libproxy:0=[${MULTILIB_USEDEP}] )
 	nls? ( virtual/libintl:0=[${MULTILIB_USEDEP}] )
+	ssl? (
+		gnutls? (
+			app-misc/ca-certificates
+			net-libs/gnutls:0=[${MULTILIB_USEDEP}]
+		)
+		!gnutls? (
+			dev-libs/openssl:0=[${MULTILIB_USEDEP}]
+		)
+		pkcs11? ( dev-libs/pakchois:0=[${MULTILIB_USEDEP}] )
+	)
 	zlib? ( sys-libs/zlib:0=[${MULTILIB_USEDEP}] )"
 DEPEND="${RDEPEND}
-	virtual/pkgconfig[${MULTILIB_USEDEP}]"
+	virtual/pkgconfig"
 
 MULTILIB_CHOST_TOOLS=(
 	/usr/bin/neon-config
@@ -42,10 +42,8 @@ src_prepare() {
 	# Use CHOST-prefixed version of xml2-config for cross-compilation.
 	sed -e "s/AC_CHECK_PROG(XML2_CONFIG,/AC_CHECK_TOOL(XML2_CONFIG,/" -i macros/neon-xml-parser.m4 || die "sed failed"
 
-	# Use OpenSSL <1.1 compatibility code with LibreSSL.
-	# Functions EVP_PKEY_up_ref(), EVP_PKEY_get0_RSA(), RSA_meth_get0_app_data(), RSA_meth_new(), RSA_meth_free(),
-	# RSA_meth_set_priv_enc(), RSA_meth_set0_app_data() are not implemented in LibreSSL 2.5.1.
-	sed -e "s/#if OPENSSL_VERSION_NUMBER < 0x10100000L/& || defined(LIBRESSL_VERSION_NUMBER)/" -i src/ne_openssl.c src/ne_pkcs11.c || die "sed failed"
+	# Fix compatibility with OpenSSL >=1.1.
+	sed -e "s/RSA_F_RSA_PRIVATE_ENCRYPT/RSA_F_RSA_OSSL_PRIVATE_ENCRYPT/" -i src/ne_pkcs11.c || die "sed failed"
 
 	eapply_user
 
@@ -70,14 +68,15 @@ multilib_src_configure() {
 		myconf+=(--with-libxml2)
 	fi
 
-	if use gnutls; then
-		myconf+=(--with-ssl=gnutls --with-ca-bundle="${EPREFIX}/etc/ssl/certs/ca-certificates.crt")
-	elif use ssl; then
-		myconf+=(--with-ssl=openssl)
+	if use ssl; then
+		if use gnutls; then
+			myconf+=(--with-ssl=gnutls --with-ca-bundle="${EPREFIX}/etc/ssl/certs/ca-certificates.crt")
+		else
+			myconf+=(--with-ssl=openssl)
+		fi
 	fi
 
 	econf \
-		--docdir="${EPREFIX}/usr/share/doc/${PF}" \
 		--enable-shared \
 		$(use_with kerberos gssapi) \
 		$(use_with libproxy) \
@@ -100,7 +99,7 @@ multilib_src_install() {
 }
 
 multilib_src_install_all() {
-	find "${ED}" -name "*.la" -delete
+	find "${D}" -name "*.la" -type f -delete || die
 
 	dodoc AUTHORS BUGS NEWS README THANKS TODO
 }

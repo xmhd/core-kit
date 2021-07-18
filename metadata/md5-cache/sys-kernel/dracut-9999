@@ -1,13 +1,14 @@
 BDEPEND=app-text/asciidoc app-text/docbook-xml-dtd:4.5 >=app-text/docbook-xsl-stylesheets-1.75.2 >=dev-libs/libxslt-1.1.26 virtual/pkgconfig virtual/pkgconfig >=dev-vcs/git-1.8.2.1[curl]
-DEFINED_PHASES=configure install postinst setup unpack
-DEPEND=>=sys-apps/kmod-23
+DEFINED_PHASES=configure install postinst setup test unpack
+DEPEND=>=sys-apps/kmod-23 elibc_musl? ( sys-libs/fts-standalone )
 DESCRIPTION=Generic initramfs generation tool
 EAPI=7
 HOMEPAGE=https://dracut.wiki.kernel.org
-IUSE=selinux kernel_linux
+IUSE=selinux test kernel_linux
 LICENSE=GPL-2
-RDEPEND=app-arch/cpio >=app-shells/bash-4.0:0 sys-apps/coreutils[xattr(-)] >=sys-apps/kmod-23[tools] || ( >=sys-apps/sysvinit-2.87-r3 sys-apps/systemd[sysv-utils] ) >=sys-apps/util-linux-2.21 virtual/pkgconfig virtual/udev selinux? ( sec-policy/selinux-dracut sys-libs/libselinux sys-libs/libsepol )
-RESTRICT=test
+PROPERTIES=live
+RDEPEND=app-arch/cpio >=app-shells/bash-4.0:0 sys-apps/coreutils[xattr(-)] >=sys-apps/kmod-23[tools] || ( >=sys-apps/sysvinit-2.87-r3 sys-apps/openrc[sysv-utils(-),selinux?] sys-apps/systemd[sysv-utils] ) >=sys-apps/util-linux-2.21 virtual/pkgconfig virtual/udev elibc_musl? ( sys-libs/fts-standalone ) selinux? ( sec-policy/selinux-dracut sys-libs/libselinux sys-libs/libsepol )
+RESTRICT=!test? ( test )
 SLOT=0
-_eclasses_=bash-completion-r1	47a7402d95930413ce25ba8d857339bb	eutils	6e6c2737b59a4b982de6fb3ecefd87f8	git-r3	0d4635eeb5a96cd5315597a47eba25c9	linux-info	953c3b1c472dcadbf62098a9301327f2	multilib	b2f01ad412baf81650c23fcf0975fa33	systemd	71fd8d2065d102753fb9e4d20eaf3e9f	toolchain-funcs	f164325a2cdb5b3ea39311d483988861
-_md5_=24281344e798c994dc5b556872706586
+_eclasses_=bash-completion-r1	d3a60385655d9b402be765a6de333245	git-r3	cc875b0c1e9b3bdac1af0f82f3ba29da	linux-info	7e8ed4c6a1d136fb291c52386f996c2c	multilib	97566c1a256d07b00848aa767e38a352	optfeature	cc13a38ea4d26565e83ef21d58bcd4ab	systemd	c846b9e02ac8293bfc9ca38a195c2a18	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa
+_md5_=6599a55209812928df0da855f7221b69

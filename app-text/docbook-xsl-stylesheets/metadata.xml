@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<!-- maintainer-needed -->
-	<use>
-		<flag name="ruby">
+ <upstream>
+  <remote-id type="sourceforge">docbook</remote-id>
+ </upstream>
+ <use>
+  <flag name="ruby">
 			Install the Ruby-based dbtoepub script; requires an interpreter
 			compatible with <pkg>app-eselect/eselect-ruby</pkg>.
 		</flag>
-	</use>
-	<upstream>
-		<remote-id type="sourceforge">docbook</remote-id>
-	</upstream>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

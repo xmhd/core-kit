@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>radhermit@gentoo.org</email>
-		<name>Tim Harder</name>
-	</maintainer>
-	<upstream>
-		<remote-id type="sourceforge">avf</remote-id>
-	</upstream>
+ <upstream>
+  <remote-id type="sourceforge">avf</remote-id>
+  <changelog>https://sourceforge.net/p/avf/git/ci/master/tree/NEWS</changelog>
+ </upstream>
+ <use>
+  <flag name="webdav">Allow mounting WebDAV shares via <pkg>net-libs/neon</pkg></flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

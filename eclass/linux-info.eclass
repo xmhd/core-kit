@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: linux-info.eclass
@@ -33,8 +33,10 @@
 # @DESCRIPTION:
 # A string containing the directory of the target kernel sources. The default value is
 # "/usr/src/linux"
+KERNEL_DIR="${KERNEL_DIR:-${ROOT%/}/usr/src/linux}"
 
 # @ECLASS-VARIABLE: CONFIG_CHECK
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # A string containing a list of .config options to check for before
 # proceeding with the install.
@@ -57,13 +59,20 @@
 # sources.
 
 # @ECLASS-VARIABLE: ERROR_<CFG>
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # A string containing the error message to display when the check against CONFIG_CHECK
 # fails. <CFG> should reference the appropriate option used in CONFIG_CHECK.
 #
-#   e.g.: ERROR_MTRR="MTRR exists in the .config but shouldn't!!"
+# e.g.: ERROR_MTRR="MTRR exists in the .config but shouldn't!!"
+#
+# CONFIG_CHECK="CFG" with ERROR_<CFG>="Error Message" will die
+# CONFIG_CHECK="~CFG" with ERROR_<CFG>="Error Message" calls eerror without dieing
+# CONFIG_CHECK="~CFG" with WARNING_<CFG>="Warning Message" calls ewarn without dieing
+
 
 # @ECLASS-VARIABLE: KBUILD_OUTPUT
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # A string passed on commandline, or set from the kernel makefile. It contains the directory
 # which is to be used as the kernel object directory.
@@ -72,35 +81,43 @@
 # set by hand. These are as follows:
 
 # @ECLASS-VARIABLE: KV_FULL
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's a string containing the full kernel version. ie: 2.6.9-gentoo-johnm-r1
 
 # @ECLASS-VARIABLE: KV_MAJOR
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's an integer containing the kernel major version. ie: 2
 
 # @ECLASS-VARIABLE: KV_MINOR
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's an integer containing the kernel minor version. ie: 6
 
 # @ECLASS-VARIABLE: KV_PATCH
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's an integer containing the kernel patch version. ie: 9
 
 # @ECLASS-VARIABLE: KV_EXTRA
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's a string containing the kernel EXTRAVERSION. ie: -gentoo
 
 # @ECLASS-VARIABLE: KV_LOCAL
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's a string containing the kernel LOCALVERSION concatenation. ie: -johnm
 
 # @ECLASS-VARIABLE: KV_DIR
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's a string containing the kernel source directory, will be null if
 # KERNEL_DIR is invalid.
 
 # @ECLASS-VARIABLE: KV_OUT_DIR
+# @OUTPUT_VARIABLE
 # @DESCRIPTION:
 # A read-only variable. It's a string containing the kernel object directory, will be KV_DIR unless
 # KBUILD_OUTPUT is used. This should be used for referencing .config.
@@ -112,11 +129,6 @@ inherit toolchain-funcs
 EXPORT_FUNCTIONS pkg_setup
 
 IUSE="kernel_linux"
-
-# Overwritable environment Var's
-# ---------------------------------------
-KERNEL_DIR="${KERNEL_DIR:-${ROOT%/}/usr/src/linux}"
-
 
 # Bug fixes
 # fix to bug #75034
@@ -159,14 +171,14 @@ qeerror() { qout eerror "${@}" ; }
 # ---------------------------------------
 
 # @FUNCTION: getfilevar
-# @USAGE: variable configfile
+# @USAGE: <variable> <configfile>
 # @RETURN: the value of the variable
 # @DESCRIPTION:
 # It detects the value of the variable defined in the file configfile. This is
 # done by including the configfile, and printing the variable with Make.
 # It WILL break if your makefile has missing dependencies!
 getfilevar() {
-	local ERROR basefname basedname myARCH="${ARCH}" M="${S}"
+	local ERROR basefname basedname myARCH="${ARCH}"
 	ERROR=0
 
 	[ -z "${1}" ] && ERROR=1
@@ -184,18 +196,15 @@ getfilevar() {
 
 		# We use nonfatal because we want the caller to take care of things #373151
 		[[ ${EAPI:-0} == [0123] ]] && nonfatal() { "$@"; }
-		case ${EBUILD_PHASE_FUNC} in
-			pkg_info|pkg_nofetch|pkg_pretend) M="${T}" ;;
-		esac
 		echo -e "e:\\n\\t@echo \$(${1})\\ninclude ${basefname}" | \
-			nonfatal emake -C "${basedname}" M="${M}" ${BUILD_FIXES} -s -f - 2>/dev/null
+			nonfatal emake -C "${basedname}" M="${T}" ${BUILD_FIXES} -s -f - 2>/dev/null
 
 		ARCH=${myARCH}
 	fi
 }
 
 # @FUNCTION: getfilevar_noexec
-# @USAGE: variable configfile
+# @USAGE: <variable> <configfile>
 # @RETURN: the value of the variable
 # @DESCRIPTION:
 # It detects the value of the variable defined in the file configfile.
@@ -310,7 +319,7 @@ require_configured_kernel() {
 }
 
 # @FUNCTION: linux_chkconfig_present
-# @USAGE: option
+# @USAGE: <option>
 # @RETURN: true or false
 # @DESCRIPTION:
 # It checks that CONFIG_<option>=y or CONFIG_<option>=m is present in the current kernel .config
@@ -322,7 +331,7 @@ linux_chkconfig_present() {
 }
 
 # @FUNCTION: linux_chkconfig_module
-# @USAGE: option
+# @USAGE: <option>
 # @RETURN: true or false
 # @DESCRIPTION:
 # It checks that CONFIG_<option>=m is present in the current kernel .config
@@ -334,7 +343,7 @@ linux_chkconfig_module() {
 }
 
 # @FUNCTION: linux_chkconfig_builtin
-# @USAGE: option
+# @USAGE: <option>
 # @RETURN: true or false
 # @DESCRIPTION:
 # It checks that CONFIG_<option>=y is present in the current kernel .config
@@ -346,7 +355,7 @@ linux_chkconfig_builtin() {
 }
 
 # @FUNCTION: linux_chkconfig_string
-# @USAGE: option
+# @USAGE: <option>
 # @RETURN: CONFIG_<option>
 # @DESCRIPTION:
 # It prints the CONFIG_<option> value of the current kernel .config (it requires a configured kernel).
@@ -361,7 +370,7 @@ linux_chkconfig_string() {
 # ---------------------------------------
 
 # @FUNCTION: kernel_is
-# @USAGE: [-lt -gt -le -ge -eq] major_number [minor_number patch_number]
+# @USAGE: [-lt -gt -le -ge -eq] <major_number> [minor_number patch_number]
 # @RETURN: true or false
 # @DESCRIPTION:
 # It returns true when the current kernel version satisfies the comparison against the passed version.
@@ -813,7 +822,7 @@ check_extra_config() {
 			linux_chkconfig_present ${config} || error=1
 		fi
 
-		if [[ ${error} > 0 ]]; then
+		if [[ ${error} -gt 0 ]]; then
 			local report_func="eerror" local_error
 			local_error="ERROR_${config}"
 			local_error="${!local_error}"
@@ -848,14 +857,14 @@ check_extra_config() {
 		fi
 	done
 
-	if [[ ${hard_errors_count} > 0 ]]; then
+	if [[ ${hard_errors_count} -gt 0 ]]; then
 		eerror "Please check to make sure these options are set correctly."
 		eerror "Failure to do so may cause unexpected problems."
 		eerror "Once you have satisfied these options, please try merging"
 		eerror "this package again."
 		export LINUX_CONFIG_EXISTS_DONE="${old_LINUX_CONFIG_EXISTS_DONE}"
 		die "Incorrect kernel configuration options"
-	elif [[ ${soft_errors_count} > 0 ]]; then
+	elif [[ ${soft_errors_count} -gt 0 ]]; then
 		ewarn "Please check to make sure these options are set correctly."
 		ewarn "Failure to do so may cause unexpected problems."
 	else
@@ -954,9 +963,9 @@ linux-info_pkg_setup() {
 			ewarn "linux-2.4 (or modules building against a linux-2.4 kernel)!"
 			echo
 			ewarn "Either switch to another gcc-version (via gcc-config) or use a"
-			ewarn "newer kernel that supports gcc-4."
+			ewarn "newer kernel that supports >=sys-devel/gcc-4."
 			echo
-			ewarn "Also be aware that bugreports about gcc-4 not working"
+			ewarn "Also, be aware that bug reports about gcc-4 not working"
 			ewarn "with linux-2.4 based ebuilds will be closed as INVALID!"
 			echo
 		fi

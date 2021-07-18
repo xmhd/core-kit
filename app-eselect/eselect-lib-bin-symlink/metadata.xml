@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-  <maintainer type="person">
-    <email>mgorny@gentoo.org</email>
-    <name>Michał Górny</name>
-  </maintainer>
-  <upstream>
-    <maintainer status="active">
-      <email>mgorny@gentoo.org</email>
-      <name>Michał Górny</name>
-    </maintainer>
-    <bugs-to>https://bitbucket.org/mgorny/eselect-lib-bin-symlink/issues/</bugs-to>
-    <remote-id type="bitbucket">mgorny/eselect-lib-bin-symlink</remote-id>
-  </upstream>
+ <maintainer type="person">
+  <email>mgorny@gentoo.org</email>
+  <name>Michał Górny</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="github">mgorny/eselect-lib-bin-symlink</remote-id>
+  <bugs-to>https://github.com/mgorny/eselect-lib-bin-symlink/issues/</bugs-to>
+ </upstream>
+ <origin>gentoo-staging</origin>
+ <stabilize-allarches/>
 </pkgmetadata>

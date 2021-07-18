@@ -1,38 +1,32 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-PYTHON_COMPAT=( python2_7 python3_{4,5,6} )
+EAPI=7
+
+PYTHON_COMPAT=( python3_{7,8,9} )
 DISTUTILS_OPTIONAL=1
-inherit autotools distutils-r1 eutils git-r3 libtool multilib multilib-minimal
+inherit autotools distutils-r1 git-r3 multilib-minimal
 
 DESCRIPTION="Libraries providing APIs to netlink protocol based Linux kernel interfaces"
-HOMEPAGE="http://www.infradead.org/~tgr/libnl/ https://github.com/thom311/libnl"
-EGIT_REPO_URI="
-	https://github.com/thom311/libnl.git
-"
+HOMEPAGE="https://www.infradead.org/~tgr/libnl/ https://github.com/thom311/libnl"
+EGIT_REPO_URI="https://github.com/thom311/libnl"
+
 LICENSE="LGPL-2.1 utils? ( GPL-2 )"
 SLOT="3"
 KEYWORDS=""
 IUSE="+debug static-libs python +threads utils"
 
-RDEPEND="
-	python? ( ${PYTHON_DEPS} )
-"
-DEPEND="
+RDEPEND="python? ( ${PYTHON_DEPS} )"
+DEPEND="${RDEPEND}"
+BDEPEND="
 	${RDEPEND}
-	python? ( dev-lang/swig )
 	sys-devel/bison
 	sys-devel/flex
+	python? ( dev-lang/swig )
 "
+REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
-REQUIRED_USE="
-	python? ( ${PYTHON_REQUIRED_USE} )
-"
-
-DOCS=(
-	ChangeLog
-)
+DOCS=( ChangeLog )
 
 MULTILIB_WRAPPED_HEADERS=(
 	# we do not install CLI stuff for non-native
@@ -50,14 +44,19 @@ MULTILIB_WRAPPED_HEADERS=(
 	/usr/include/libnl3/netlink/cli/utils.h
 )
 
+PATCHES=(
+	"${FILESDIR}"/${PN}-99999999-2to3.patch
+)
+
 src_prepare() {
 	default
 
 	eautoreconf
 
 	if use python; then
-		cd "${S}"/python || die
+		pushd "${S}"/python > /dev/null || die
 		distutils-r1_src_prepare
+		popd > /dev/null || die
 	fi
 
 	# out-of-source build broken
@@ -71,30 +70,38 @@ multilib_src_configure() {
 		$(use_enable debug) \
 		$(use_enable static-libs static) \
 		$(use_enable threads) \
-		--disable-silent-rules
+		--disable-doc
 }
 
 multilib_src_compile() {
 	default
 
 	if multilib_is_native_abi && use python; then
-		cd python || die
+		pushd python > /dev/null || die
 		distutils-r1_src_compile
+		popd > /dev/null || die
 	fi
 }
 
 multilib_src_install() {
-	emake DESTDIR="${D}" install
+	default
 
 	if multilib_is_native_abi && use python; then
 		# Unset DOCS= since distutils-r1.eclass interferes
 		local DOCS=()
-		cd python || die
+
+		pushd python > /dev/null || die
+
 		distutils-r1_src_install
+
+		# For no obvious reason this is not done automatically
+		python_foreach_impl python_optimize
+
+		popd > /dev/null || die
 	fi
 }
 
 multilib_src_install_all() {
 	einstalldocs
-	prune_libtool_files --modules
+	find "${ED}" -name '*.la' -delete || die
 }

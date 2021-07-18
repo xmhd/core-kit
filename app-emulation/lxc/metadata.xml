@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-  <maintainer type="person">
-    <email>vdupras@gentoo.org</email>
-  </maintainer>
-  <maintainer type="project">
-    <email>virtualization@gentoo.org</email>
-    <name>Gentoo Virtualization Project</name>
-  </maintainer>
-  <use>
-    <flag name="apparmor">Enable AppArmor support</flag>
-    <flag name="cgmanager">Enable support for cgroup management using <pkg>app-admin/cgmanager</pkg></flag>
-    <flag name="templates">Install old style templates through <pkg>app-emulation/lxc-templates</pkg></flag>
-  </use>
-  <upstream>
-    <remote-id type="github">lxc/lxc</remote-id>
-  </upstream>
+ <maintainer type="person">
+  <email>juippis@gentoo.org</email>
+  <name>Joonas Niilola</name>
+ </maintainer>
+ <maintainer type="project">
+  <email>virtualization@gentoo.org</email>
+  <name>Gentoo Virtualization Project</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="github">lxc/lxc</remote-id>
+ </upstream>
+ <use>
+  <flag name="apparmor">Enable AppArmor support</flag>
+  <flag name="tools">Build and install additional command line tools</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

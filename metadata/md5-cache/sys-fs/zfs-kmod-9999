@@ -1,12 +1,15 @@
-DEFINED_PHASES=compile configure install postinst postrm preinst prepare setup test unpack
-DEPEND=dev-lang/perl virtual/awk >=dev-vcs/git-1.8.2.1[curl] kernel_linux? ( virtual/modutils ) sys-apps/sed kernel_linux? ( virtual/linux-sources virtual/libelf ) >=app-portage/elt-patches-20170815 !<sys-devel/gettext-0.18.1.1-r3 || ( >=sys-devel/automake-1.16.1:1.16 >=sys-devel/automake-1.15.1:1.15 ) >=sys-devel/autoconf-2.69 >=sys-devel/libtool-2.4
+BDEPEND=dev-lang/perl virtual/awk sys-devel/gnuconfig >=app-portage/elt-patches-20170815 || ( >=sys-devel/automake-1.16.2-r1:1.16 ) >=sys-devel/autoconf-2.69 >=sys-devel/libtool-2.4 >=dev-vcs/git-1.8.2.1[curl]
+DEFINED_PHASES=compile configure install postinst postrm preinst prepare pretend setup unpack
+DEPEND=kernel_linux? ( sys-apps/kmod[tools] dist-kernel? ( virtual/dist-kernel:= ) ) sys-apps/sed kernel_linux? ( virtual/linux-sources virtual/libelf )
 DESCRIPTION=Linux ZFS kernel module for sys-fs/zfs
-EAPI=5
-HOMEPAGE=https://zfsonlinux.org/
-IUSE=custom-cflags debug +rootfs kernel_linux kernel_linux kernel_linux
-LICENSE=CDDL GPL-2+
-RDEPEND=dev-lang/perl virtual/awk !sys-fs/zfs-fuse !sys-kernel/spl kernel_linux? ( virtual/modutils )
+EAPI=7
+HOMEPAGE=https://github.com/openzfs/zfs
+IUSE=custom-cflags debug +rootfs kernel_linux kernel_linux dist-kernel
+LICENSE=CDDL MIT debug? ( GPL-2+ )
+PDEPEND=dist-kernel? ( ~sys-fs/zfs-9999[dist-kernel] )
+PROPERTIES=live
+RDEPEND=!sys-kernel/spl kernel_linux? ( sys-apps/kmod[tools] dist-kernel? ( virtual/dist-kernel:= ) )
 RESTRICT=debug? ( strip ) test
-SLOT=0
-_eclasses_=autotools	1bf086cdd7356f5c9a4acd9727bd2065	autotools-utils	696393cddf6200db17a31641f597b403	desktop	b1d22ac8bdd4679ab79c71aca235009d	eapi7-ver	756b3f27d8e46131d5cf3c51bd876446	epatch	a1bf4756dba418a7238f3be0cb010c54	estack	43ddf5aaffa7a8d0482df54d25a66a1f	eutils	6e6c2737b59a4b982de6fb3ecefd87f8	flag-o-matic	a09389deba2c0a7108b581e02c7cecbf	git-r3	0d4635eeb5a96cd5315597a47eba25c9	libtool	f143db5a74ccd9ca28c1234deffede96	linux-info	953c3b1c472dcadbf62098a9301327f2	linux-mod	4b8528d500d6555ad20763a77b31766c	ltprune	08f9e1d9ee0af8f5d9a7854efbcd8c0e	multilib	b2f01ad412baf81650c23fcf0975fa33	preserve-libs	ef207dc62baddfddfd39a164d9797648	toolchain-funcs	f164325a2cdb5b3ea39311d483988861	vcs-clean	2a0f74a496fa2b1552c4f3398258b7bf
-_md5_=519fa391030daead4584f47b44a20a72
+SLOT=0/9999
+_eclasses_=autotools	2a36908d5f63f41614b450a2459567da	dist-kernel-utils	ba761317b3fcd25e34c3fb8e5bf1e45f	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	flag-o-matic	4134b5c0fb719b9161d10bdaba9e09e5	git-r3	cc875b0c1e9b3bdac1af0f82f3ba29da	gnuconfig	262062cef0ba4f22b397193da514a350	libtool	241a8f577b9781a42a7421e53448a44e	linux-info	7e8ed4c6a1d136fb291c52386f996c2c	linux-mod	17a64f2afa0418f425ab010223fc0d48	multilib	97566c1a256d07b00848aa767e38a352	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa	wrapper	4251d4c84c25f59094fd557e0063a974
+_md5_=a3dbe96b2194ed8edf110f0457f15019

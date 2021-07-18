@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-<!-- maintainer-needed -->
+ <maintainer type="person">
+  <email>plevine457@gmail.com</email>
+  <name>Peter Levine</name>
+ </maintainer>
+ <maintainer type="person">
+  <email>bkohler@gentoo.org</email>
+  <name>Ben Kohler</name>
+ </maintainer>
+ 
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

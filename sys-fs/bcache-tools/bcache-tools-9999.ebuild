@@ -1,47 +1,59 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=7
 
-EGIT_NONSHALLOW=true
+PYTHON_COMPAT=( python3_{7..10} )
 
-inherit git-r3 toolchain-funcs udev
+inherit flag-o-matic python-r1 toolchain-funcs udev
 
-DESCRIPTION="Tools for bcachefs"
-HOMEPAGE="http://bcache.evilpiepirate.org/"
-SRC_URI=""
-EGIT_REPO_URI="https://github.com/g2p/bcache-tools.git"
+if [[ "${PV}" == "9999" ]]; then
+	inherit git-r3
+	EGIT_REPO_URI="https://git.kernel.org/pub/scm/linux/kernel/git/colyli/bcache-tools.git https://kernel.googlesource.com/pub/scm/linux/kernel/git/colyli/bcache-tools.git"
+else
+	SRC_URI="https://git.kernel.org/pub/scm/linux/kernel/git/colyli/${PN}.git/snapshot/${P}.tar.gz"
+fi
+
+DESCRIPTION="Tools for bcache"
+HOMEPAGE="https://git.kernel.org/pub/scm/linux/kernel/git/colyli/bcache-tools.git/"
 
 SLOT="0"
 LICENSE="GPL-2"
-KEYWORDS=""
-IUSE=""
 
-RDEPEND=">=sys-apps/util-linux-2.24"
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
+RDEPEND="
+	${PYTHON_DEPS}
+	sys-apps/util-linux
+	virtual/udev
+"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
+	default
+
 	tc-export CC
 	sed \
 		-e '/^CFLAGS/s:-O2::' \
-		-e '/^CFLAGS/s:-g:-std=gnu89:' \
+		-e '/^CFLAGS/s:-g::' \
 		-i Makefile || die
+
+	append-lfs-flags
 }
 
 src_install() {
 	into /
-	dosbin make-bcache bcache-super-show
+	dosbin bcache make-bcache bcache-super-show
 
 	exeinto $(get_udevdir)
 	doexe bcache-register probe-bcache
+
+	python_foreach_impl python_doscript bcache-status
 
 	udev_dorules 69-bcache.rules
 
 	insinto /etc/initramfs-tools/hooks/bcache
 	doins initramfs/hook
-
-	insinto /etc/initcpio/install/bcache
-	doins initcpio/install
 
 	# that is what dracut does
 	insinto /usr/lib/dracut/modules.d/90bcache

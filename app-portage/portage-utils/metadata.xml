@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<!DOCTYPE pkgmetadata SYSTEM "https://liguros.gitlab.io/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer type="person">
-		<email>grobian@gentoo.org</email>
-		<name>Fabian Groffen</name>
-	</maintainer>
+ <maintainer type="person">
+  <email>grobian@gentoo.org</email>
+  <name>Fabian Groffen</name>
+ </maintainer>
+ <upstream>
+  <remote-id type="cpe">cpe:/a:gentoo:portage</remote-id>
+ </upstream>
+ <use>
+  <flag name="qmanifest">Build qmanifest applet, this adds additional dependencies for GPG, OpenSSL and BLAKE2B hashing</flag>
+  <flag name="qtegrity">Build qtegrity applet, this adds additional dependencies for OpenSSL</flag>
+ </use>
+ <origin>gentoo-staging</origin>
 </pkgmetadata>

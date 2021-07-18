@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 inherit multibuild postgres
@@ -8,8 +8,9 @@ EXPORT_FUNCTIONS pkg_setup src_prepare src_compile src_install src_test
 # @ECLASS: postgres-multi.eclass
 # @MAINTAINER:
 # PostgreSQL <pgsql-bugs@gentoo.org>
-# @AUTHOR: Aaron W. Swenson <titanofold@gentoo.org>
-# @SUPPORTED_EAPIS: 5 6
+# @AUTHOR:
+# Aaron W. Swenson <titanofold@gentoo.org>
+# @SUPPORTED_EAPIS: 5 6 7
 # @BLURB: An eclass to build PostgreSQL-related packages against multiple slots
 # @DESCRIPTION:
 # postgres-multi enables ebuilds, particularly PostgreSQL extensions, to
@@ -18,12 +19,13 @@ EXPORT_FUNCTIONS pkg_setup src_prepare src_compile src_install src_test
 
 
 case ${EAPI:-0} in
-	5|6) ;;
+	5|6|7) ;;
 	*) die "Unsupported EAPI=${EAPI} (unknown) for ${ECLASS}" ;;
 esac
 
 
 # @ECLASS-VARIABLE: POSTGRES_COMPAT
+# @PRE_INHERIT
 # @REQUIRED
 # @DESCRIPTION:
 # A Bash array containing a list of compatible PostgreSQL slots as
@@ -146,7 +148,7 @@ postgres-multi_src_prepare() {
 
 	case ${EAPI:-0} in
 		0|1|2|3|4|5) epatch_user ;;
-		6) eapply_user ;;
+		6|7) eapply_user ;;
 	esac
 
 	local MULTIBUILD_VARIANT

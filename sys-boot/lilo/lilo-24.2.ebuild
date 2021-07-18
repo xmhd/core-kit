@@ -1,34 +1,44 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="5"
+EAPI="7"
 
-inherit eutils flag-o-matic toolchain-funcs
+inherit flag-o-matic toolchain-funcs
 
 DOLILO_V="0.6"
 IUSE="static minimal pxeserial device-mapper"
 
-DESCRIPTION="Standard Linux boot loader"
-HOMEPAGE="https://alioth.debian.org/projects/lilo/"
+DESCRIPTION="LInux LOader, the original Linux bootloader"
+HOMEPAGE="https://www.joonet.de/lilo/"
 
 DOLILO_TAR="dolilo-${DOLILO_V}.tar.bz2"
 SRC_URI="
-	http://lilo.alioth.debian.org/ftp/sources/${P}.tar.gz
+	https://www.joonet.de/lilo/ftp/sources/${P}.tar.gz
 	mirror://gentoo/${DOLILO_TAR}
 "
 
 SLOT="0"
 LICENSE="BSD GPL-2"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="-* amd64 x86"
 
 DEPEND=">=sys-devel/bin86-0.15.5"
 RDEPEND="device-mapper? ( >=sys-fs/lvm2-2.02.45 )"
 
+# Bootloaders should not be using arbitrary CFLAGS without good reason.  A bootloader
+# is typically only executed once to boot the system, and it should work the first time.
+QA_FLAGS_IGNORED="/sbin/lilo"
+
 src_prepare() {
+	default
+
 	# this patch is needed when booting PXE and the device you're using
 	# emulates vga console via serial console.
 	# IE..  B.B.o.o.o.o.t.t.i.i.n.n.g.g....l.l.i.i.n.n.u.u.x.x and stair stepping.
-	use pxeserial && epatch "${FILESDIR}/${PN}-24.1-novga.patch"
+	use pxeserial && eapply "${FILESDIR}/${PN}-24.1-novga.patch"
+
+	eapply "${FILESDIR}/${PN}-24.2-add-nvme-support.patch"
+	eapply "${FILESDIR}/${PN}-24.x-fix-gcc-10.patch"
+	eapply "${FILESDIR}/${PN}-24.x-check-for-__GLIBC__.patch"
 
 	# Do not strip and have parallel make
 	# FIXME: images/Makefile does weird stuff
@@ -56,24 +66,23 @@ src_compile() {
 		local target=all
 	fi
 
-	emake CC="$(tc-getCC) ${LDFLAGS}" ${target} || die
+	emake CC="$(tc-getCC) ${LDFLAGS}" ${target}
 }
 
 src_install() {
-	keepdir /boot
-	emake DESTDIR="${D}" install || die
+	emake DESTDIR="${D}" install
 
 	if use !minimal; then
 		into /
-		dosbin "${WORKDIR}"/dolilo/dolilo || die
+		dosbin "${WORKDIR}"/dolilo/dolilo
 
 		into /usr
-		dosbin keytab-lilo.pl || die
+		dosbin keytab-lilo.pl
 
 		insinto /etc
-		newins "${FILESDIR}"/lilo.conf lilo.conf.example || die
+		newins "${FILESDIR}"/lilo.conf lilo.conf.example
 
-		newconfd "${WORKDIR}"/dolilo/dolilo.conf.d dolilo.example || die
+		newconfd "${WORKDIR}"/dolilo/dolilo.conf.d dolilo.example
 
 		dodoc CHANGELOG* readme/README.* readme/INCOMPAT README
 		docinto samples ; dodoc sample/*
